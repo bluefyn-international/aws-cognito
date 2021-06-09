@@ -99,6 +99,15 @@ class AwsCognitoClient
      */
     const EXPIRED_CODE = 'ExpiredCodeException';
 
+    /**
+     * Constant representing if an invite message should be sent.
+     *
+     * @var string
+     */
+    const ACTION_METHOD_SUPPRESS = 'SUPPRESS';
+
+    const ACTION_METHOD_RESEND = 'RESEND';
+
 
     /**
      * @var CognitoIdentityProviderClient
@@ -280,16 +289,21 @@ class AwsCognitoClient
 
 
     /**
-     * Register a user and send them an email to set their password.
-     * https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AdminCreateUser.html
+     * @param string      $username
+     * @param string|null $password
+     * @param array       $attributes
+     * @param array|null  $clientMetadata
+     * @param string|null $actionMethod
      *
-     * @param $username
-     * @param array $attributes
-     * @param array $clientMetadata (optional)
      * @return bool
      */
-    public function inviteUser(string $username, string $password=null, array $attributes = [], array $clientMetadata=null)
-    {
+    public function inviteUser(
+        string $username,
+        string $password = null,
+        array $attributes = [],
+        array $clientMetadata = null,
+        ?string $actionMethod = null
+    ) : bool {
         //Force validate email
         if ($attributes['email']) {
             $attributes['email_verified'] = 'true';
@@ -305,6 +319,10 @@ class AwsCognitoClient
         //Set Client Metadata
         if (!empty($clientMetadata)) {
             $payload['ClientMetadata'] = $this->buildClientMetadata([], $clientMetadata);
+        }
+
+        if (in_array($actionMethod, [self::ACTION_METHOD_SUPPRESS, self::ACTION_METHOD_RESEND])) {
+            $payload['MessageAction'] = $actionMethod;
         }
 
         //Set Temporary password
