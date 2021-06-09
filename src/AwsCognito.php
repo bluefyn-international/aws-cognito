@@ -11,14 +11,10 @@
 
 namespace Ellaisys\Cognito;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Ellaisys\Cognito\Http\Parser\Parser;
 use Ellaisys\Cognito\Exceptions\AwsCognitoException;
 use Ellaisys\Cognito\Exceptions\InvalidTokenException;
+use Ellaisys\Cognito\Http\Parser\Parser;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class AwsCognito
 {
@@ -30,7 +26,7 @@ class AwsCognito
     protected $auth;
 
     /**
-     * Aws Cognito Manager
+     * Aws Cognito Manager.
      *
      * @var \Ellaisys\Cognito\AwsCognitoManager
      */
@@ -44,8 +40,8 @@ class AwsCognito
     protected $parser;
 
     /**
-     * The AwsCognito Claim token
-     * 
+     * The AwsCognito Claim token.
+     *
      * @var \Ellaisys\Cognito\AwsCognitoClaim|null
      */
     protected $claim;
@@ -59,6 +55,7 @@ class AwsCognito
 
     /**
      * AwsCognito constructor.
+     *
      * @param AwsCognitoManager $manager
      * @param Parser            $parser
      */
@@ -85,9 +82,9 @@ class AwsCognito
     }
 
     /**
-     * @return $this
-     *
      * @throws AwsCognitoException
+     *
+     * @return $this
      */
     public function parseToken() : self
     {
@@ -105,13 +102,14 @@ class AwsCognito
     /**
      * @param string $token
      *
-     * @return $this
-     *
      * @throws AwsCognitoException
+     *
+     * @return $this
      */
     public function setToken(string $token) : self
     {
         $this->token = (new AwsCognitoToken($token));
+
         if (empty($this->token)) {
             throw new AwsCognitoException('The token could not be validated.');
         }
@@ -125,16 +123,16 @@ class AwsCognito
      */
     public function getClaim()
     {
-        return (!empty($this->claim))?$this->claim:null;
+        return (! empty($this->claim)) ? $this->claim : null;
     }
 
 
     /**
      * @param AwsCognitoClaim $claim
      *
-     * @return $this
-     *
      * @throws AwsCognitoException
+     *
+     * @return $this
      */
     public function setClaim(AwsCognitoClaim $claim) : self
     {
@@ -184,9 +182,9 @@ class AwsCognito
 
 
     /**
-     * @return $this
-     *
      * @throws InvalidTokenException
+     *
+     * @return $this
      */
     public function authenticate() : self
     {
@@ -202,9 +200,9 @@ class AwsCognito
 
 
     /**
-     * @return Authenticatable
-     *
      * @throws InvalidTokenException
+     *
+     * @return Authenticatable
      */
     public function toUser()
     {
@@ -213,9 +211,9 @@ class AwsCognito
 
 
     /**
-     * @return Authenticatable|null
-     *
      * @throws InvalidTokenException
+     *
+     * @return Authenticatable|null
      */
     public function user()
     {
@@ -235,5 +233,4 @@ class AwsCognito
     {
         return $this->manager->encode($this->claim)->store();
     }
-
 }

@@ -18,7 +18,7 @@ class AwsCognitoTokenValidator
     /**
      * Check the structure of the token.
      *
-     * @param  string  $value
+     * @param string $value
      *
      * @return string
      */
@@ -28,7 +28,7 @@ class AwsCognitoTokenValidator
     }
 
     /**
-     * @param  string  $token
+     * @param string $token
      *
      * @throws \Ellaisys\Cognito\Exceptions\InvalidTokenException
      *
@@ -50,5 +50,4 @@ class AwsCognitoTokenValidator
 
         return $token;
     }
-
 }

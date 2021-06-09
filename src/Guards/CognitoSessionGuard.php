@@ -11,26 +11,25 @@
 
 namespace Ellaisys\Cognito\Guards;
 
+use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;
+
 use Aws\Result as AwsResult;
 
-use Illuminate\Support\Facades\Log;
-
+use Ellaisys\Cognito\AwsCognitoClient;
+use Ellaisys\Cognito\Exceptions\AwsCognitoException;
+use Ellaisys\Cognito\Exceptions\InvalidUserModelException;
+use Ellaisys\Cognito\Exceptions\NoLocalUserException;
+use Exception;
 use Illuminate\Auth\SessionGuard;
+
+
 use Illuminate\Contracts\Auth\Authenticatable;
+
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Request;
-
-use Illuminate\Database\Eloquent\Model;
-
-use Ellaisys\Cognito\AwsCognitoClient;
-
-use Exception;
-use Ellaisys\Cognito\Exceptions\AwsCognitoException;
-use Ellaisys\Cognito\Exceptions\NoLocalUserException;
-use Ellaisys\Cognito\Exceptions\InvalidUserModelException;
-use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;
 
 class CognitoSessionGuard extends SessionGuard implements StatefulGuard
 {
@@ -48,13 +47,12 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
 
     /**
      * CognitoSessionGuard constructor.
-     * 
-     * @param string $name
+     *
+     * @param string           $name
      * @param AwsCognitoClient $client
-     * @param UserProvider $provider
-     * @param Session $session
-     * @param null|Request $request
-
+     * @param UserProvider     $provider
+     * @param Session          $session
+     * @param null|Request     $request
      */
     public function __construct(
         string $name,
@@ -71,23 +69,23 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
     /**
      * @param mixed $user
      * @param array $credentials
-     * @return bool
+     *
      * @throws InvalidUserModelException
+     *
+     * @return bool
      */
     protected function hasValidCredentials($user, $credentials)
     {
         /** @var Result $response */
         $result = $this->client->authenticate($credentials['email'], $credentials['password']);
 
-        if (!empty($result) && $result instanceof AwsResult) {
-
-            if (isset($result['ChallengeName']) && 
-                in_array($result['ChallengeName'], config('cognito.forced_challenge_names'))) 
-            {
+        if (! empty($result) && $result instanceof AwsResult) {
+            if (isset($result['ChallengeName']) &&
+                in_array($result['ChallengeName'], config('cognito.forced_challenge_names'))) {
                 $this->challengeName = $result['ChallengeName'];
             }
 
-            return ($user instanceof Authenticatable);
+            return $user instanceof Authenticatable;
         }
 
         return false;
@@ -96,11 +94,13 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
 
     /**
      * Attempt to authenticate an existing user using the credentials
-     * using Cognito
+     * using Cognito.
      *
-     * @param  array  $credentials
-     * @param  bool   $remember
+     * @param array $credentials
+     * @param bool  $remember
+     *
      * @throws
+     *
      * @return bool
      */
     public function attempt(array $credentials = [], $remember = false)
@@ -113,7 +113,7 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
             $this->lastAttempted = $user = $this->provider->retrieveByCredentials($credentials);
 
             //Check if the user exists in local data store
-            if (!($user instanceof Authenticatable)) {
+            if (! ($user instanceof Authenticatable)) {
                 throw new NoLocalUserException();
             }
 
@@ -124,7 +124,7 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
                 //Fire successful attempt
                 $this->fireAuthenticatedEvent($user);
 
-                if ((!empty($this->challengeName)) && config('cognito.force_password_change_web')) {
+                if ((! empty($this->challengeName)) && config('cognito.force_password_change_web')) {
                     switch ($this->challengeName) {
                         case AwsCognitoClient::NEW_PASSWORD_CHALLENGE:
                         case AwsCognitoClient::RESET_REQUIRED_PASSWORD:
@@ -133,7 +133,7 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
                                 ->with('force', true)
                                 ->with('messaage', $this->challengeName);
                             break;
-                        
+
                         default:
                             return true;
                             break;
@@ -148,20 +148,20 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
 
             return false;
         } catch (NoLocalUserException $e) {
-            Log::error('CognitoSessionGuard:attempt:NoLocalUserException:'.$e->getMessage());
+            Log::error('CognitoSessionGuard:attempt:NoLocalUserException:' . $e->getMessage());
 
             //Fire failed attempt
             $this->fireFailedEvent($user, $credentials);
 
             throw $e;
         } catch (CognitoIdentityProviderException $e) {
-            Log::error('CognitoSessionGuard:attempt:CognitoIdentityProviderException:'.$e->getAwsErrorCode());
+            Log::error('CognitoSessionGuard:attempt:CognitoIdentityProviderException:' . $e->getAwsErrorCode());
 
             //Fire failed attempt
             $this->fireFailedEvent($user, $credentials);
 
             //Set proper route
-            if (!empty($e->getAwsErrorCode())) {
+            if (! empty($e->getAwsErrorCode())) {
                 switch ($e->getAwsErrorCode()) {
                     case 'PasswordResetRequiredException':
                         return redirect(route('cognito.form.reset.password.code'))
@@ -169,7 +169,7 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
                             ->with('force', true)
                             ->with('messaage', $e->getAwsErrorCode());
                         break;
-                    
+
                     default:
                         return $e->getAwsErrorCode();
                         break;
@@ -178,14 +178,14 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
 
             return $e->getAwsErrorCode();
         } catch (AwsCognitoException $e) {
-            Log::error('CognitoSessionGuard:attempt:AwsCognitoException:'.$e->getMessage());
+            Log::error('CognitoSessionGuard:attempt:AwsCognitoException:' . $e->getMessage());
 
             //Fire failed attempt
             $this->fireFailedEvent($user, $credentials);
 
             throw $e;
         } catch (Exception $e) {
-            Log::error('CognitoSessionGuard:attempt:Exception:'.$e->getMessage());
+            Log::error('CognitoSessionGuard:attempt:Exception:' . $e->getMessage());
 
             //Fire failed attempt
             $this->fireFailedEvent($user, $credentials);
@@ -193,5 +193,4 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
             return false;
         }
     }
-
 }

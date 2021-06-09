@@ -11,36 +11,35 @@
 
 namespace Ellaisys\Cognito\Guards;
 
-use Aws\Result as AwsResult;
-use Illuminate\Http\Request;
-use Illuminate\Auth\TokenGuard;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Contracts\Auth\Authenticatable;
-
-use Ellaisys\Cognito\AwsCognito;
-use Ellaisys\Cognito\AwsCognitoClient;
-use Ellaisys\Cognito\AwsCognitoClaim;
-
-use Exception;
-use Ellaisys\Cognito\Exceptions\NoLocalUserException;
-use Ellaisys\Cognito\Exceptions\InvalidUserModelException;
-use Ellaisys\Cognito\Exceptions\AwsCognitoException;
 use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;
+use Aws\Result as AwsResult;
+use Ellaisys\Cognito\AwsCognito;
+use Ellaisys\Cognito\AwsCognitoClaim;
+use Ellaisys\Cognito\AwsCognitoClient;
+use Ellaisys\Cognito\Exceptions\AwsCognitoException;
+
+use Ellaisys\Cognito\Exceptions\InvalidUserModelException;
+use Ellaisys\Cognito\Exceptions\NoLocalUserException;
+use Exception;
+
+use Illuminate\Auth\TokenGuard;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CognitoTokenGuard extends TokenGuard
 {
-
     /**
-     * Username key
-     * 
-     * @var  \string  
+     * Username key.
+     *
+     * @var \string
      */
     protected $keyUsername;
 
 
     /**
-     * @var  \AwsCognitoClient
+     * @var \AwsCognitoClient
      */
     protected $client;
 
@@ -54,8 +53,8 @@ class CognitoTokenGuard extends TokenGuard
 
 
     /**
-     * The AwsCognito Claim token
-     * 
+     * The AwsCognito Claim token.
+     *
      * @var \Ellaisys\Cognito\AwsCognitoClaim|null
      */
     protected $claim;
@@ -63,16 +62,16 @@ class CognitoTokenGuard extends TokenGuard
 
     /**
      * CognitoTokenGuard constructor.
-     * 
+     *
      * @param $callback
      * @param AwsCognitoClient $client
-     * @param Request $request
-     * @param UserProvider $provider
+     * @param Request          $request
+     * @param UserProvider     $provider
      */
     public function __construct(
         AwsCognito $cognito,
-        AwsCognitoClient $client, 
-        Request $request, 
+        AwsCognitoClient $client,
+        Request $request,
         UserProvider $provider = null,
         string $keyUsername = 'email'
     ) {
@@ -87,25 +86,25 @@ class CognitoTokenGuard extends TokenGuard
     /**
      * @param mixed $user
      * @param array $credentials
-     * @return bool
+     *
      * @throws InvalidUserModelException
+     *
+     * @return bool
      */
     protected function hasValidCredentials($user, $credentials)
     {
         /** @var Result $response */
         $result = $this->client->authenticate($credentials[$this->keyUsername], $credentials['password']);
-       
-        if (!empty($result) && $result instanceof AwsResult) {
 
-            if (isset($result['ChallengeName']) && 
-                in_array($result['ChallengeName'], config('cognito.forced_challenge_names'))) 
-            {
+        if (! empty($result) && $result instanceof AwsResult) {
+            if (isset($result['ChallengeName']) &&
+                in_array($result['ChallengeName'], config('cognito.forced_challenge_names'))) {
                 //Check for forced action on challenge status
                 if (config('cognito.force_password_change_api')) {
                     $this->claim = [
                         'session_token' => $result['Session'],
-                        'username' => $credentials[$this->keyUsername],
-                        'status' => $result['ChallengeName']
+                        'username'      => $credentials[$this->keyUsername],
+                        'status'        => $result['ChallengeName'],
                     ];
                 } else {
                     if (config('cognito.force_password_auto_update_api')) {
@@ -114,6 +113,7 @@ class CognitoTokenGuard extends TokenGuard
 
                         //Get the result object again
                         $result = $this->client->authenticate($credentials[$this->keyUsername], $credentials['password']);
+
                         if (empty($result)) {
                             return false;
                         }
@@ -124,12 +124,12 @@ class CognitoTokenGuard extends TokenGuard
             }
 
             //Create Claim for confirmed users
-            if (!isset($result['ChallengeName'])) {
+            if (! isset($result['ChallengeName'])) {
                 //Create claim token
                 $this->claim = new AwsCognitoClaim($result, $user, $credentials[$this->keyUsername]);
-            }     
+            }
 
-            return ($this->claim)?true:false;
+            return ($this->claim) ? true : false;
         } else {
             return false;
         }
@@ -141,9 +141,11 @@ class CognitoTokenGuard extends TokenGuard
     /**
      * Attempt to authenticate a user using the given credentials.
      *
-     * @param  array  $credentials
-     * @param  bool   $remember
+     * @param array $credentials
+     * @param bool  $remember
+     *
      * @throws
+     *
      * @return bool
      */
     public function attempt(array $credentials = [], $remember = false)
@@ -152,7 +154,7 @@ class CognitoTokenGuard extends TokenGuard
             $this->lastAttempted = $user = $this->provider->retrieveByCredentials($credentials);
 
             //Check if the user exists in local data store
-            if (!($user instanceof Authenticatable)) {
+            if (! ($user instanceof Authenticatable)) {
                 throw new NoLocalUserException();
             }
 
@@ -163,13 +165,15 @@ class CognitoTokenGuard extends TokenGuard
             return false;
         } catch (NoLocalUserException $e) {
             Log::error('CognitoTokenGuard:attempt:NoLocalUserException:');
+
             throw $e;
         } catch (CognitoIdentityProviderException $e) {
-            Log::error('CognitoTokenGuard:attempt:CognitoIdentityProviderException:'.$e->getAwsErrorCode());
+            Log::error('CognitoTokenGuard:attempt:CognitoIdentityProviderException:' . $e->getAwsErrorCode());
 
             //Set proper route
-            if (!empty($e->getAwsErrorCode())) {
+            if (! empty($e->getAwsErrorCode())) {
                 $errorCode = 'CognitoIdentityProviderException';
+
                 switch ($e->getAwsErrorCode()) {
                     case 'PasswordResetRequiredException':
                         $errorCode = 'cognito.validation.auth.reset_password';
@@ -178,21 +182,23 @@ class CognitoTokenGuard extends TokenGuard
                     case 'NotAuthorizedException':
                         $errorCode = 'cognito.validation.auth.user_unauthorized';
                         break;
-                    
+
                     default:
                         $errorCode = $e->getAwsErrorCode();
                         break;
                 } //End switch
 
-                return response()->json(['error' => $errorCode, 'message' => $e->getAwsErrorCode() ], 400);
+                return response()->json(['error' => $errorCode, 'message' => $e->getAwsErrorCode()], 400);
             }
 
             return $e->getAwsErrorCode();
         } catch (AwsCognitoException $e) {
-            Log::error('CognitoTokenGuard:attempt:AwsCognitoException:'. $e->getMessage());
+            Log::error('CognitoTokenGuard:attempt:AwsCognitoException:' . $e->getMessage());
+
             throw $e;
         } catch (Exception $e) {
-            Log::error('CognitoTokenGuard:attempt:Exception:'.$e->getMessage());
+            Log::error('CognitoTokenGuard:attempt:Exception:' . $e->getMessage());
+
             throw $e;
         }
     }
@@ -201,13 +207,13 @@ class CognitoTokenGuard extends TokenGuard
     /**
      * Create a token for a user.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param \Illuminate\Contracts\Auth\Authenticatable $user
      *
      * @return claim
      */
     private function login($user)
     {
-        if (!empty($this->claim)) {
+        if (! empty($this->claim)) {
 
             //Save the claim if it matches the Cognito Claim
             if ($this->claim instanceof AwsCognitoClaim) {
@@ -240,7 +246,7 @@ class CognitoTokenGuard extends TokenGuard
     /**
      * Logout the user, thus invalidating the token.
      *
-     * @param  bool  $forceForever
+     * @param bool $forceForever
      *
      * @return void
      */
@@ -254,7 +260,7 @@ class CognitoTokenGuard extends TokenGuard
     /**
      * Invalidate the token.
      *
-     * @param  bool  $forceForever
+     * @param bool $forceForever
      *
      * @return \Ellaisys\Cognito\AwsCognito
      */
@@ -269,23 +275,26 @@ class CognitoTokenGuard extends TokenGuard
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable
      */
-    public function user() {
+    public function user()
+    {
 
         //Check if the user exists
-        if (!is_null($this->user)) {
-			return $this->user;
-		}
+        if (! is_null($this->user)) {
+            return $this->user;
+        }
 
         //Retrieve token from request and authenticate
-		return $this->getTokenForRequest();
+        return $this->getTokenForRequest();
     }
 
 
     /**
-	 * Get the token for the current request.
-	 * @return string
-	 */
-	public function getTokenForRequest () {
+     * Get the token for the current request.
+     *
+     * @return string
+     */
+    public function getTokenForRequest()
+    {
         //Check for request having token
         if (! $this->cognito->parser()->setRequest($this->request)->hasToken()) {
             return null;
@@ -297,12 +306,12 @@ class CognitoTokenGuard extends TokenGuard
 
         //Get claim
         $claim = $this->cognito->getClaim();
+
         if (empty($claim)) {
             return null;
         }
 
         //Get user and return
         return $this->user = $this->provider->retrieveById($claim['sub']);
-	}
-
+    }
 }

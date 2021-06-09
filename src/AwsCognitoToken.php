@@ -27,7 +27,7 @@ class AwsCognitoToken
      */
     public function __construct($token)
     {
-        $this->token = (string) (new AwsCognitoTokenValidator)->check($token);
+        $this->token = (string) (new AwsCognitoTokenValidator())->check($token);
     }
 
     /**
@@ -45,5 +45,4 @@ class AwsCognitoToken
     {
         return $this->get();
     }
-
 }

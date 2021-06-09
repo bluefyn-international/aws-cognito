@@ -11,31 +11,28 @@
 
 namespace Ellaisys\Cognito\Providers;
 
+use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
 use Ellaisys\Cognito\AwsCognito;
 use Ellaisys\Cognito\AwsCognitoClient;
 use Ellaisys\Cognito\AwsCognitoManager;
 use Ellaisys\Cognito\Guards\CognitoSessionGuard;
-use Ellaisys\Cognito\Guards\CognitoTokenGuard;
 
-use Ellaisys\Cognito\Http\Parser\Parser;
+use Ellaisys\Cognito\Guards\CognitoTokenGuard;
 use Ellaisys\Cognito\Http\Parser\AuthHeaders;
 
-use Ellaisys\Cognito\Providers\StorageProvider;
+
+use Ellaisys\Cognito\Http\Parser\Parser;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Application;
-
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
 
 /**
  * Class AwsCognitoServiceProvider.
  */
 class AwsCognitoServiceProvider extends ServiceProvider
 {
-    
     /**
      * Register the application services.
      *
@@ -51,7 +48,7 @@ class AwsCognitoServiceProvider extends ServiceProvider
     public function boot()
     {
         //Configuration path
-        $path = realpath(__DIR__.'/../../config/config.php');
+        $path = realpath(__DIR__ . '/../../config/config.php');
 
         //Publish config
         $this->publishes([
@@ -87,7 +84,7 @@ class AwsCognitoServiceProvider extends ServiceProvider
 
 
     /**
-     * Register Cognito Facades
+     * Register Cognito Facades.
      *
      * @return void
      */
@@ -98,12 +95,12 @@ class AwsCognitoServiceProvider extends ServiceProvider
             $parser = new Parser(
                 $app['request'],
                 [
-                    new AuthHeaders,
+                    new AuthHeaders(),
                     // new QueryString,
                     // new InputSource,
                     // new RouteParams,
                     // new Cookies($this->config('decrypt_cookies')),
-                ]
+                ],
             );
 
             $app->refresh('request', $parser, 'setRequest');
@@ -113,29 +110,29 @@ class AwsCognitoServiceProvider extends ServiceProvider
 
         //Storage Provider
         $this->app->singleton('ellaisys.aws.cognito.provider.storage', function (Application $app) {
-            return (new StorageProvider(
-                config('cognito.storage_provider')
-            ));
+            return new StorageProvider(
+                config('cognito.storage_provider'),
+            );
         });
 
         //Aws Cognito Manager
         $this->app->singleton('ellaisys.aws.cognito.manager', function (Application $app) {
-            return (new AwsCognitoManager(
-                $app['ellaisys.aws.cognito.provider.storage']
-            ));
+            return new AwsCognitoManager(
+                $app['ellaisys.aws.cognito.provider.storage'],
+            );
         });
 
         $this->app->singleton('ellaisys.aws.cognito', function (Application $app, array $config) {
-            return (new AwsCognito(
+            return new AwsCognito(
                 $app['ellaisys.aws.cognito.manager'],
-                $app['ellaisys.aws.cognito.parser']
-            ));
+                $app['ellaisys.aws.cognito.parser'],
+            );
         });
     }
 
 
     /**
-     * Register Cognito Provider
+     * Register Cognito Provider.
      *
      * @return void
      */
@@ -144,11 +141,12 @@ class AwsCognitoServiceProvider extends ServiceProvider
         $this->app->singleton(AwsCognitoClient::class, function (Application $app) {
             $aws_config = [
                 'region'      => config('cognito.region'),
-                'version'     => config('cognito.version')
+                'version'     => config('cognito.version'),
             ];
 
             //Set AWS Credentials
             $credentials = config('cognito.credentials');
+
             if (! empty($credentials['key']) && ! empty($credentials['secret'])) {
                 $aws_config['credentials'] = Arr::only($credentials, ['key', 'secret', 'token']);
             }
@@ -157,7 +155,7 @@ class AwsCognitoServiceProvider extends ServiceProvider
                 new CognitoIdentityProviderClient($aws_config),
                 config('cognito.app_client_id'),
                 config('cognito.app_client_secret'),
-                config('cognito.user_pool_id')
+                config('cognito.user_pool_id'),
             );
         });
     }
@@ -176,7 +174,7 @@ class AwsCognitoServiceProvider extends ServiceProvider
                 $client = $app->make(AwsCognitoClient::class),
                 $app['auth']->createUserProvider($config['provider']),
                 $app['session.store'],
-                $app['request']
+                $app['request'],
             );
 
             $guard->setCookieJar($this->app['cookie']);
@@ -196,12 +194,11 @@ class AwsCognitoServiceProvider extends ServiceProvider
     protected function extendApiAuthGuard()
     {
         Auth::extend('cognito-token', function (Application $app, $name, array $config) {
-
             $guard = new CognitoTokenGuard(
                 $app['ellaisys.aws.cognito'],
                 $client = $app->make(AwsCognitoClient::class),
                 $app['request'],
-                Auth::createUserProvider($config['provider'])
+                Auth::createUserProvider($config['provider']),
             );
 
             $guard->setRequest($app->refresh('request', $guard, 'setRequest'));
@@ -209,5 +206,4 @@ class AwsCognitoServiceProvider extends ServiceProvider
             return $guard;
         });
     }
-    
 }

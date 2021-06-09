@@ -2,16 +2,12 @@
 
 namespace Ellaisys\Cognito\Exceptions;
 
-use Throwable;
-
 use Exception;
-use Illuminate\Auth\AuthenticationException;
 
-use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class InvalidUserFieldException extends Exception
 {
-
     /**
      * Report the exception.
      *
@@ -26,13 +22,13 @@ class InvalidUserFieldException extends Exception
     /**
      * Render the exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
+     * @param \Illuminate\Http\Request $request
+     * @param \Throwable               $exception
+     *
      * @return \Illuminate\Http\Response
      */
     public function render($request, Throwable $exception)
     {
         return parent::render($request, $exception);
     }
-    
 }

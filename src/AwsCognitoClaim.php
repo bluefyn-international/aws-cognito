@@ -12,14 +12,12 @@
 namespace Ellaisys\Cognito;
 
 use Aws\Result as AwsResult;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Ellaisys\Cognito\Validators\AwsCognitoTokenValidator;
 use Exception;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class AwsCognitoClaim
 {
-
     /**
      * @var string
      */
@@ -48,30 +46,31 @@ class AwsCognitoClaim
 
     /**
      * AwsCognitoClaim constructor.
+     *
      * @param AwsResult            $result
      * @param Authenticatable|null $user
      * @param string               $username
      *
      * @throws Exception
      */
-    public function __construct(AwsResult $result, ?Authenticatable $user = null, string $username)
+    public function __construct(AwsResult $result, ?Authenticatable $user, string $username)
     {
         try {
             $authResult = $result['AuthenticationResult'];
-            if (!is_array($authResult)) {
+
+            if (! is_array($authResult)) {
                 throw new Exception('Malformed AWS Authentication Result.', 400);
             }
 
             //Create token object
             $token = $authResult['AccessToken'];
 
-            $this->token = (string) (new AwsCognitoTokenValidator)->check($token);
+            $this->token = (string) (new AwsCognitoTokenValidator())->check($token);
             $this->data = $authResult;
             $this->username = $username;
             $this->user = $user;
             $this->sub = $user['id'];
-
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
     }

@@ -11,13 +11,7 @@
 
 namespace Ellaisys\Cognito;
 
-use Ellaisys\Cognito\AwsCognitoToken;
-use Ellaisys\Cognito\AwsCognitoClaim;
 use Ellaisys\Cognito\Providers\StorageProvider;
-
-use Exception;
-use Ellaisys\Cognito\Exceptions\AwsCognitoException;
-use Ellaisys\Cognito\Exceptions\TokenBlacklistedException;
 
 class AwsCognitoManager
 {
@@ -43,15 +37,16 @@ class AwsCognitoManager
     protected $token;
 
     /**
-     * The AwsCognito Claim token
-     * 
+     * The AwsCognito Claim token.
+     *
      * @var \Ellaisys\Cognito\AwsCognitoClaim|null
      */
     protected $claim;
 
     /**
      * AwsCognitoManager constructor.
-     * @param StorageProvider $provider
+     *
+     * @param StorageProvider               $provider
      * @param null|\Tymon\JWTAuth\Blacklist $blacklist
      */
     public function __construct(StorageProvider $provider, $blacklist = null)
@@ -79,7 +74,7 @@ class AwsCognitoManager
      */
     public function decode()
     {
-        return ($this->claim)?$this->claim:null;
+        return ($this->claim) ? $this->claim : null;
     }
 
 
@@ -89,7 +84,7 @@ class AwsCognitoManager
     public function store() : bool
     {
         $data = $this->claim->getData();
-        $durationInSecs = ($data)?(int) $data['ExpiresIn']:3600;
+        $durationInSecs = ($data) ? (int) $data['ExpiresIn'] : 3600;
         $this->provider->add($this->token, json_encode($this->claim), $durationInSecs);
 
         return true;
@@ -105,7 +100,7 @@ class AwsCognitoManager
     {
         $this->token = $token;
         $claim = $this->provider->get($token);
-        $this->claim = $claim?json_decode($claim, true):null;
+        $this->claim = $claim ? json_decode($claim, true) : null;
 
         return $this;
     }
@@ -122,5 +117,4 @@ class AwsCognitoManager
 
         return $this;
     }
-
 }

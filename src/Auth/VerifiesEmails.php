@@ -11,32 +11,25 @@
 
 namespace Ellaisys\Cognito\Auth;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
-
 use Ellaisys\Cognito\AwsCognitoClient;
 
-use Exception;
-use Ellaisys\Cognito\Exceptions\AwsCognitoException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Collection;
 
 trait VerifiesEmails
-{ 
-
+{
     /**
      * Mark the authenticated user's email address as verified.
      *
-     * @param  \Illuminate\Support\Collection  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param \Illuminate\Support\Collection $request
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function verify(Collection $request)
     {
-
         $validator = Validator::make($request, [
-            'email' => 'required|email', 
+            'email'             => 'required|email',
             'confirmation_code' => 'required|numeric',
         ]);
 
@@ -71,12 +64,12 @@ trait VerifiesEmails
     /**
      * Resend the email verification notification.
      *
-     * @param  \Illuminate\Support\Collection  $request
+     * @param \Illuminate\Support\Collection $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function resend(Collection $request)
     {
-
         $response = app()->make(AwsCognitoClient::class)->resendToken($request->email);
 
         if ($response == 'validation.invalid_user') {
@@ -93,5 +86,4 @@ trait VerifiesEmails
 
         return response()->json(['success' => 'true']);
     }
-    
 }
