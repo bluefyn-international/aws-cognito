@@ -45,10 +45,10 @@ trait ResetsPasswords
 
             if ($validator->fails()) {
                 throw new ValidationException($validator);
-            } //End if
+            }
 
             $request = collect($request->all());
-        } //End if
+        }
 
         //Create AWS Cognito Client
         $client = app()->make(AwsCognitoClient::class);
@@ -62,10 +62,10 @@ trait ResetsPasswords
             $response = $client->resetPassword($request[$paramToken], $request[$paramUsername], $request[$passwordNew]);
         } else {
             return false;
-        } //End if
+        }
 
         return $response;
-    } //Function ends
+    }
 
 
     /**
@@ -82,7 +82,7 @@ trait ResetsPasswords
         return view('vendor.black-bits.laravel-cognito-auth.reset-password')->with(
             ['email' => $request->email]
         );
-    } //Function ends
+    }
 
 
     /**
@@ -98,6 +98,6 @@ trait ResetsPasswords
             'email'    => 'required|email',
             'password' => 'required|confirmed|min:8',
         ];
-    } //Function ends
+    }
 
 } //Trait ends

@@ -80,7 +80,7 @@ class AwsCognitoManager
         $this->token = $claim->getToken();
 
         return $this;
-    } //Function ends
+    }
 
 
     /**
@@ -91,7 +91,7 @@ class AwsCognitoManager
     public function decode()
     {
         return ($this->claim)?$this->claim:null;
-    } //Function ends
+    }
 
 
     /**
@@ -106,7 +106,7 @@ class AwsCognitoManager
         $this->provider->add($this->token, json_encode($this->claim), $durationInSecs);
 
         return true;
-    } //Function ends
+    }
 
 
     /**
@@ -121,7 +121,7 @@ class AwsCognitoManager
         $this->claim = $claim?json_decode($claim, true):null;
 
         return $this;
-    } //Function ends
+    }
 
 
     /**
@@ -134,6 +134,6 @@ class AwsCognitoManager
         $this->provider->destroy($token);
 
         return $this;
-    } //Function ends
+    }
 
 } //Class ends

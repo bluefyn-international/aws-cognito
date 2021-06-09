@@ -95,10 +95,10 @@ class AwsCognito
             } catch (AwsCognitoException $e) {
                 $this->token = null;
             }
-        } //End if
+        }
 
         return $this->token;
-    } //Function ends
+    }
 
 
     /**
@@ -115,10 +115,10 @@ class AwsCognito
 
         if (empty($token)) {
             throw new AwsCognitoException('The token could not be parsed from the request');
-        } //End if
+        }
 
         return $this->setToken($token);
-    } //Function ends
+    }
 
 
     /**
@@ -133,10 +133,10 @@ class AwsCognito
         $this->token = (new AwsCognitoToken($token));
         if (empty($this->token)) {
             throw new AwsCognitoException('The token could not be validated.');
-        } //End if
+        }
 
         return $this;
-    } //Function ends
+    }
 
 
     /**
@@ -147,7 +147,7 @@ class AwsCognito
     public function getClaim()
     {
         return (!empty($this->claim))?$this->claim:null;
-    } //Function ends
+    }
 
 
     /**
@@ -163,7 +163,7 @@ class AwsCognito
         $this->token = $this->setToken($claim->getToken());
 
         return $this;
-    } //Function ends
+    }
 
 
     /**
@@ -179,7 +179,7 @@ class AwsCognito
         $this->token = null;
 
         return $this;
-    } //Function ends
+    }
 
 
     /**
@@ -194,7 +194,7 @@ class AwsCognito
         $this->parser->setRequest($request);
 
         return $this;
-    } //Function ends
+    }
 
 
     /**
@@ -205,7 +205,7 @@ class AwsCognito
     public function parser()
     {
         return $this->parser;
-    } //Function ends
+    }
 
 
     /**
@@ -220,10 +220,10 @@ class AwsCognito
 
         if (empty($this->claim)) {
             throw new InvalidTokenException();
-        } //End if
+        }
 
         return $this; //->user();
-    } //Function ends
+    }
 
 
     /**
@@ -234,7 +234,7 @@ class AwsCognito
     public function toUser()
     {
         return $this->authenticate();
-    } //Function ends
+    }
 
 
     /**
@@ -249,10 +249,10 @@ class AwsCognito
         //Get Claim
         if (empty($this->claim)) {
             throw new InvalidTokenException();
-        } //End if
+        }
 
         return $this->claim->getUser();
-    } //Function ends
+    }
 
 
     /**
@@ -263,6 +263,6 @@ class AwsCognito
     public function storeToken()
     {
         return $this->manager->encode($this->claim)->store();
-    } //Function ends
+    }
 
 } //Class ends

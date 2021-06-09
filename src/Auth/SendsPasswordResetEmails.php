@@ -41,7 +41,7 @@ trait SendsPasswordResetEmails
         //JSON Response
         if ($isJsonResponse) {
             return $response;
-        } //End if
+        }
 
         //Action Response
         if ($response) {
@@ -52,13 +52,13 @@ trait SendsPasswordResetEmails
             } else {
                 return redirect(route('welcome'))
                     ->with('success', true);
-            } //End if
+            }
         } else {
             return redirect()->back()
                 ->withInput($request->only($usernameKey))
                 ->withErrors([$usernameKey => 'cognito.invalid_user']);
-        } //End if
-    } //Function ends
+        }
+    }
 
 
     /**
@@ -73,6 +73,6 @@ trait SendsPasswordResetEmails
         $response = app()->make(AwsCognitoClient::class)->sendResetLink($username, $attributes);
 
         return ($response == Password::RESET_LINK_SENT);
-    } //Function ends
+    }
     
 } //Trait ends

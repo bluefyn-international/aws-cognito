@@ -65,7 +65,7 @@ class AwsCognitoClaim
             $authResult = $result['AuthenticationResult'];
             if (!is_array($authResult)) {
                 throw new Exception('Malformed AWS Authentication Result.', 400);
-            } //End if
+            }
 
             //Create token object
             $token = $authResult['AccessToken'];
@@ -78,8 +78,8 @@ class AwsCognitoClaim
 
         } catch(Exception $e) {
             throw $e;
-        } //Try-catch ends
-    } //Function ends
+        }
+    }
 
 
     /**
@@ -90,7 +90,7 @@ class AwsCognitoClaim
     public function getToken()
     {
         return $this->token;
-    } //Function ends
+    }
 
 
     /**
@@ -101,7 +101,7 @@ class AwsCognitoClaim
     public function getData()
     {
         return $this->data;
-    } //Function ends
+    }
 
 
     /**
@@ -112,7 +112,7 @@ class AwsCognitoClaim
     public function getUser()
     {
         return $this->user;
-    } //Function ends
+    }
 
 
     /**
@@ -123,7 +123,7 @@ class AwsCognitoClaim
     public function getSub()
     {
         return $this->sub;
-    } //Function ends
+    }
 
 
     /**
@@ -134,6 +134,6 @@ class AwsCognitoClaim
     public function __toString()
     {
         return $this->getToken();
-    } //Function ends
+    }
 
 } //Class ends

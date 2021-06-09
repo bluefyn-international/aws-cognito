@@ -43,7 +43,7 @@ class Parser
     {
         $this->request = $request;
         $this->chain = $chain;
-    } //Function ends
+    }
 
 
     /**
@@ -54,7 +54,7 @@ class Parser
     public function getChain()
     {
         return $this->chain;
-    } //Function ends
+    }
 
 
     /**
@@ -68,7 +68,7 @@ class Parser
     {
         $this->chain = $chain;
         return $this;
-    } //Function ends
+    }
 
     /**
      * Alias for setting the order of the chain.
@@ -80,7 +80,7 @@ class Parser
     public function setChainOrder(array $chain)
     {
         return $this->setChain($chain);
-    } //Function ends
+    }
 
 
     /**
@@ -94,9 +94,9 @@ class Parser
         foreach ($this->chain as $parser) {
             if ($response = $parser->parse($this->request)) {
                 return $response;
-            } //End if
+            }
         } //Loop ends
-    } //Function ends
+    }
 
 
     /**
@@ -107,7 +107,7 @@ class Parser
     public function hasToken()
     {
         return $this->parseToken() !== null;
-    } //Function ends
+    }
 
 
     /**
@@ -122,6 +122,6 @@ class Parser
         $this->request = $request;
 
         return $this;
-    } //Function ends
+    }
 
 } //Class ends

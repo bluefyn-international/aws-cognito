@@ -116,26 +116,26 @@ class CognitoTokenGuard extends TokenGuard
                         $result = $this->client->authenticate($credentials[$this->keyUsername], $credentials['password']);
                         if (empty($result)) {
                             return false;
-                        } //End if
+                        }
                     } else {
                         $this->claim = null;
-                    } //End if
-                } //End if
-            } //End if
+                    }
+                }
+            }
 
             //Create Claim for confirmed users
             if (!isset($result['ChallengeName'])) {
                 //Create claim token
                 $this->claim = new AwsCognitoClaim($result, $user, $credentials[$this->keyUsername]);
-            } //End if     
+            }     
 
             return ($this->claim)?true:false;
         } else {
             return false;
-        } //End if
+        }
 
         return false;
-    } //Function ends
+    }
 
 
     /**
@@ -154,11 +154,11 @@ class CognitoTokenGuard extends TokenGuard
             //Check if the user exists in local data store
             if (!($user instanceof Authenticatable)) {
                 throw new NoLocalUserException();
-            } //End if
+            }
 
             if ($this->hasValidCredentials($user, $credentials)) {
                 return $this->login($user);
-            } //End if
+            }
 
             return false;
         } catch (NoLocalUserException $e) {
@@ -185,7 +185,7 @@ class CognitoTokenGuard extends TokenGuard
                 } //End switch
 
                 return response()->json(['error' => $errorCode, 'message' => $e->getAwsErrorCode() ], 400);
-            } //End if
+            }
 
             return $e->getAwsErrorCode();
         } catch (AwsCognitoException $e) {
@@ -194,8 +194,8 @@ class CognitoTokenGuard extends TokenGuard
         } catch (Exception $e) {
             Log::error('CognitoTokenGuard:attempt:Exception:'.$e->getMessage());
             throw $e;
-        } //Try-catch ends
-    } //Function ends
+        }
+    }
 
 
     /**
@@ -214,11 +214,11 @@ class CognitoTokenGuard extends TokenGuard
 
                 //Set Token
                 $this->setToken();
-            } //End if
+            }
 
             //Set user
             $this->setUser($user);
-        } //End if
+        }
 
         return $this->claim;
     } //Fucntion ends
@@ -234,7 +234,7 @@ class CognitoTokenGuard extends TokenGuard
         $this->cognito->setClaim($this->claim)->storeToken();
 
         return $this;
-    } //Function ends
+    }
 
 
     /**
@@ -248,7 +248,7 @@ class CognitoTokenGuard extends TokenGuard
     {
         $this->invalidate($forceForever);
         $this->user = null;
-    } //Function ends
+    }
 
 
     /**
@@ -261,7 +261,7 @@ class CognitoTokenGuard extends TokenGuard
     public function invalidate($forceForever = false)
     {
         return $this->cognito->unsetToken($forceForever);
-    } //Function ends
+    }
 
 
     /**
@@ -274,11 +274,11 @@ class CognitoTokenGuard extends TokenGuard
         //Check if the user exists
         if (!is_null($this->user)) {
 			return $this->user;
-		} //End if
+		}
 
         //Retrieve token from request and authenticate
 		return $this->getTokenForRequest();
-    } //Function ends
+    }
 
 
     /**
@@ -289,20 +289,20 @@ class CognitoTokenGuard extends TokenGuard
         //Check for request having token
         if (! $this->cognito->parser()->setRequest($this->request)->hasToken()) {
             return null;
-        } //End if
+        }
 
         if (! $this->cognito->parseToken()->authenticate()) {
             throw new NoLocalUserException();
-        } //End if
+        }
 
         //Get claim
         $claim = $this->cognito->getClaim();
         if (empty($claim)) {
             return null;
-        } //End if
+        }
 
         //Get user and return
         return $this->user = $this->provider->retrieveById($claim['sub']);
-	} //Function ends
+	}
 
 } //Class ends

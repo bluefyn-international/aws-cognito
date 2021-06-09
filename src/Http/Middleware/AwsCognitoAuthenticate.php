@@ -38,21 +38,21 @@ class AwsCognitoAuthenticate extends BaseMiddleware
 
             if (empty($routeMiddleware) || (count($routeMiddleware)<1)) {
                 return response()->json(['error' => 'UNAUTHORIZED_REQUEST', 'exception' => null], 401);
-            } //End if
+            }
 
             $this->authenticate($request);
             return $next($request);
         } catch (Exception $e) {
             if ($e instanceof NoTokenException) {
                 return response()->json(['error' => 'UNAUTHORIZED_REQUEST', 'exception' => 'NoTokenException'], 401);
-            } //End if
+            }
 
             if ($e instanceof InvalidTokenException) {
                 return response()->json(['error' => 'UNAUTHORIZED_REQUEST', 'exception' => 'InvalidTokenException'], 401);
-            } //End if
+            }
 
             return response()->json(['error' => $e->getMessage()], 401);
-        } //Try-catch ends
-    } //Function ends
+        }
+    }
 
 } //Class ends

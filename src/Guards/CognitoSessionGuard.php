@@ -85,13 +85,13 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
                 in_array($result['ChallengeName'], config('cognito.forced_challenge_names'))) 
             {
                 $this->challengeName = $result['ChallengeName'];
-            } //End if
+            }
 
             return ($user instanceof Authenticatable);
-        } //End if
+        }
 
         return false;
-    } //Function ends
+    }
 
 
     /**
@@ -115,7 +115,7 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
             //Check if the user exists in local data store
             if (!($user instanceof Authenticatable)) {
                 throw new NoLocalUserException();
-            } //End if
+            }
 
             //Authenticate with cognito
             if ($this->hasValidCredentials($user, $credentials)) {
@@ -138,10 +138,10 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
                             return true;
                             break;
                     } //End switch
-                } //End if
+                }
 
                 return true;
-            } //End if
+            }
 
             //Fire failed attempt
             $this->fireFailedEvent($user, $credentials);
@@ -174,7 +174,7 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
                         return $e->getAwsErrorCode();
                         break;
                 } //End switch
-            } //End if
+            }
 
             return $e->getAwsErrorCode();
         } catch (AwsCognitoException $e) {
@@ -191,7 +191,7 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
             $this->fireFailedEvent($user, $credentials);
 
             return false;
-        } //Try-catch ends
-    } //Function ends
+        }
+    }
 
 } //Class ends

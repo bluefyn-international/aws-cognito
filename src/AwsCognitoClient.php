@@ -171,7 +171,7 @@ class AwsCognitoClient
         }
 
         return $response;
-    } //Function ends
+    }
 
 
     /**
@@ -197,13 +197,13 @@ class AwsCognitoClient
         } catch (CognitoIdentityProviderException $e) {
             if ($e->getAwsErrorCode() === self::USERNAME_EXISTS) {
                 return false;
-            } //End if
+            }
 
             throw $e;
         }
 
         return (bool)$response['UserConfirmed'];
-    } //Function ends
+    }
 
 
     /**
@@ -229,13 +229,13 @@ class AwsCognitoClient
         } catch (CognitoIdentityProviderException $e) {
             if ($e->getAwsErrorCode() === self::USER_NOT_FOUND) {
                 return Password::INVALID_USER;
-            } //End if
+            }
 
             throw $e;
         }
 
         return Password::RESET_LINK_SENT;
-    } //Function ends
+    }
 
 
     /**
@@ -276,7 +276,7 @@ class AwsCognitoClient
         }
 
         return Password::PASSWORD_RESET;
-    } //Function ends
+    }
 
 
     /**
@@ -293,7 +293,7 @@ class AwsCognitoClient
         //Force validate email
         if ($attributes['email']) {
             $attributes['email_verified'] = 'true';
-        } //End if
+        }
 
         //Generate payload
         $payload = [
@@ -305,31 +305,31 @@ class AwsCognitoClient
         //Set Client Metadata
         if (!empty($clientMetadata)) {
             $payload['ClientMetadata'] = $this->buildClientMetadata([], $clientMetadata);
-        } //End if
+        }
 
         //Set Temporary password
         if (!empty($password)) {
             $payload['TemporaryPassword'] = $password;
-        } //End if
+        }
 
         if (config('cognito.add_user_delivery_mediums')!="DEFAULT") {
             $payload['DesiredDeliveryMediums'] = [
                 config('cognito.add_user_delivery_mediums')
             ];                
-        } //End if
+        }
         
         try {
             $this->client->adminCreateUser($payload);
         } catch (CognitoIdentityProviderException $e) {
             if ($e->getAwsErrorCode() === self::USERNAME_EXISTS) {
                 return false;
-            } //End if
+            }
 
             throw $e;
         }
 
         return true;
-    } //Function ends
+    }
 
 
     /**
@@ -358,13 +358,13 @@ class AwsCognitoClient
         } catch (CognitoIdentityProviderException $e) {
             if ($e->getAwsErrorCode() === self::CODE_MISMATCH || $e->getAwsErrorCode() === self::EXPIRED_CODE) {
                 return Password::INVALID_TOKEN;
-            } //End if
+            }
 
             throw $e;
         }
 
         return Password::PASSWORD_RESET;
-    } //Function ends
+    }
 
 
     /**
@@ -379,8 +379,8 @@ class AwsCognitoClient
                 'UserPoolId' => $this->poolId,
                 'Username' => $username,
             ]);
-        } //End if
-    } //Function ends
+        }
+    }
 
 
     /**
@@ -405,17 +405,17 @@ class AwsCognitoClient
         } catch (CognitoIdentityProviderException $e) {
             if ($e->getAwsErrorCode() === self::USER_NOT_FOUND) {
                 return Password::INVALID_USER;
-            } //End if
+            }
 
             if ($e->getAwsErrorCode() === self::INVALID_PASSWORD) {
                 return Lang::has('passwords.password') ? 'passwords.password' : $e->getAwsErrorMessage();
-            } //End if
+            }
 
             throw $e;
         }
 
         return Password::PASSWORD_RESET;
-    } //Function ends
+    }
 
 
     /**
@@ -439,11 +439,11 @@ class AwsCognitoClient
         } catch (CognitoIdentityProviderException $e) {
             if ($e->getAwsErrorCode() === self::USER_NOT_FOUND) {
                 return Password::INVALID_USER;
-            } //End if
+            }
 
             if ($e->getAwsErrorCode() === self::INVALID_PASSWORD) {
                 return Lang::has('passwords.password') ? 'passwords.password' : $e->getAwsErrorMessage();
-            } //End if
+            }
 
             throw $e;
         }
@@ -466,7 +466,7 @@ class AwsCognitoClient
             'UserPoolId' => $this->poolId,
             'Username' => $username,
         ]);
-    } //Function ends
+    }
 
 
     public function confirmUserSignUp($username, $confirmationCode)
@@ -481,23 +481,23 @@ class AwsCognitoClient
         } catch (CognitoIdentityProviderException $e) {
             if ($e->getAwsErrorCode() === self::USER_NOT_FOUND) {
                 return 'validation.invalid_user';
-            } //End if
+            }
 
             if ($e->getAwsErrorCode() === self::CODE_MISMATCH || $e->getAwsErrorCode() === self::EXPIRED_CODE) {
                 return 'validation.invalid_token';
-            } //End if
+            }
 
             if ($e->getAwsErrorCode() === 'NotAuthorizedException' AND $e->getAwsErrorMessage() === 'User cannot be confirmed. Current status is CONFIRMED') {
                 return 'validation.confirmed';
-            } //End if
+            }
 
             if ($e->getAwsErrorCode() === 'LimitExceededException') {
                 return 'validation.exceeded';
-            } //End if
+            }
 
             throw $e;
         }
-    } //Function ends
+    }
 
 
     public function resendToken($username)
@@ -512,19 +512,19 @@ class AwsCognitoClient
 
             if ($e->getAwsErrorCode() === self::USER_NOT_FOUND) {
                 return 'validation.invalid_user';
-            } //End if
+            }
 
             if ($e->getAwsErrorCode() === 'LimitExceededException') {
                 return 'validation.exceeded';
-            } //End if
+            }
 
             if ($e->getAwsErrorCode() === 'InvalidParameterException') {
                 return 'validation.confirmed';
-            } //End if
+            }
 
             throw $e;
         }
-    } //Function ends
+    }
 
 
     // HELPER FUNCTIONS
@@ -545,7 +545,7 @@ class AwsCognitoClient
         ]);
 
         return true;
-    } //Function ends
+    }
 
 
     /**
@@ -556,7 +556,7 @@ class AwsCognitoClient
     protected function cognitoSecretHash($username)
     {
         return $this->hash($username . $this->clientId);
-    } //Function ends
+    }
 
 
     /**
@@ -575,7 +575,7 @@ class AwsCognitoClient
         );
 
         return base64_encode($hash);
-    } //Function ends
+    }
 
 
     /**
@@ -597,7 +597,7 @@ class AwsCognitoClient
         }
 
         return $user;
-    } //Function ends
+    }
 
 
     /**
@@ -618,7 +618,7 @@ class AwsCognitoClient
         } //Loop ends
 
         return $userAttributes;
-    } //Function ends
+    }
 
 
     /**
@@ -633,9 +633,9 @@ class AwsCognitoClient
             $userAttributes = array_merge($attributes, $clientMetadata);
         } else {
             $userAttributes = $attributes;
-        } //End if
+        }
         
         return $userAttributes;
-    } //Function ends
+    }
     
 } //Class ends

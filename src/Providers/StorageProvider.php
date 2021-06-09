@@ -132,10 +132,10 @@ class StorageProvider
     {
         if ($this->has($key)) {
             return $this->cache()->forget($key);
-        } //End if
+        }
 
         return false;
-    } //Function ends
+    }
 
 
     /**
@@ -146,7 +146,7 @@ class StorageProvider
     public function flush()
     {
         $this->cache()->flush();
-    } //Function ends
+    }
 
 
     /**
@@ -158,14 +158,14 @@ class StorageProvider
     {
         if ($this->supportsTags === null) {
             $this->determineTagSupport();
-        } //End if
+        }
 
         if ($this->supportsTags) {
             return $this->cache->tags($this->tag);
-        } //End if
+        }
 
         return $this->cache;
-    } //Function ends
+    }
 
 
     /**
@@ -176,7 +176,7 @@ class StorageProvider
         $this->laravelVersion = $version;
 
         return $this;
-    } //Function ends
+    }
 
 
     /**
@@ -207,6 +207,6 @@ class StorageProvider
                 $this->supportsTags = false;
             }
         }
-    } //Function ends
+    }
     
 } //Class ends

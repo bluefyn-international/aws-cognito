@@ -65,7 +65,7 @@ trait VerifiesEmails
         }
 
         return redirect($this->redirectPath())->with('verified', true);
-    } //Function ends
+    }
 
 
     /**
@@ -92,6 +92,6 @@ trait VerifiesEmails
         }
 
         return response()->json(['success' => 'true']);
-    } //Function ends
+    }
     
 } //Trait ends

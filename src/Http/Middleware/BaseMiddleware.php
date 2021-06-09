@@ -60,8 +60,8 @@ abstract class BaseMiddleware //extends Middleware
     {
         if (! $this->cognito->parser()->setRequest($request)->hasToken()) {
             throw new NoTokenException();
-        } //End if
-    } //Function ends
+        }
+    }
 
 
     /**
@@ -80,11 +80,11 @@ abstract class BaseMiddleware //extends Middleware
 
             if (! $this->cognito->parseToken()->authenticate()) {
                 throw new UnauthorizedHttpException('aws-cognito', 'User not found');
-            } //End if
+            }
         } catch (Exception $e) {
             throw $e;
-        } //Try-catch ends
-    } //Function ends
+        }
+    }
 
 
     /**
@@ -101,6 +101,6 @@ abstract class BaseMiddleware //extends Middleware
         $response->headers->set('Authorization', 'Bearer '.$token);
 
         return $response;
-    } //Function ends
+    }
 
 } //Class ends

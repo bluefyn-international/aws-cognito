@@ -43,7 +43,7 @@ class AuthHeaders //implements ParserContract
     protected function fromAltHeaders(Request $request)
     {
         return $request->server->get('HTTP_AUTHORIZATION') ?: $request->server->get('REDIRECT_HTTP_AUTHORIZATION');
-    } //Function ends
+    }
 
 
     /**
@@ -59,8 +59,8 @@ class AuthHeaders //implements ParserContract
 
         if ($header && preg_match('/'.$this->prefix.'\s*(\S+)\b/i', $header, $matches)) {
             return $matches[1];
-        } //End if
-    } //Function ends
+        }
+    }
 
 
     /**
@@ -74,7 +74,7 @@ class AuthHeaders //implements ParserContract
     {
         $this->header = $headerName;
         return $this;
-    } //Function ends
+    }
 
 
     /**
@@ -88,6 +88,6 @@ class AuthHeaders //implements ParserContract
     {
         $this->prefix = $headerPrefix;
         return $this;
-    } //Function ends
+    }
 
 } //Class ends

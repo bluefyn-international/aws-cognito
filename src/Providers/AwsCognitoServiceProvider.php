@@ -45,7 +45,7 @@ class AwsCognitoServiceProvider extends ServiceProvider
     {
         //Register Alias
         $this->registerAliases();
-    } //Function ends
+    }
 
 
     public function boot()
@@ -72,7 +72,7 @@ class AwsCognitoServiceProvider extends ServiceProvider
         //Set Guards
         $this->extendWebAuthGuard();
         $this->extendApiAuthGuard();
-    } //Function ends
+    }
 
 
     /**
@@ -131,7 +131,7 @@ class AwsCognitoServiceProvider extends ServiceProvider
                 $app['ellaisys.aws.cognito.parser']
             ));
         });
-    } //Function ends
+    }
 
 
     /**
@@ -151,7 +151,7 @@ class AwsCognitoServiceProvider extends ServiceProvider
             $credentials = config('cognito.credentials');
             if (! empty($credentials['key']) && ! empty($credentials['secret'])) {
                 $aws_config['credentials'] = Arr::only($credentials, ['key', 'secret', 'token']);
-            } //End if
+            }
 
             return new AwsCognitoClient(
                 new CognitoIdentityProviderClient($aws_config),
@@ -160,7 +160,7 @@ class AwsCognitoServiceProvider extends ServiceProvider
                 config('cognito.user_pool_id')
             );
         });
-    } //Function ends
+    }
 
 
     /**
@@ -185,7 +185,7 @@ class AwsCognitoServiceProvider extends ServiceProvider
 
             return $guard;
         });
-    } //Function ends
+    }
 
 
     /**
@@ -208,6 +208,6 @@ class AwsCognitoServiceProvider extends ServiceProvider
 
             return $guard;
         });
-    } //Function ends
+    }
     
 } //Class ends

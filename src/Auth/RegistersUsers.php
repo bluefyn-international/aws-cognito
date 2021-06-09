@@ -47,7 +47,7 @@ trait RegistersUsers
                 Log::error('RegistersUsers:createCognitoUser:InvalidUserFieldException');
                 Log::error("The configured user field {$userField} is not provided in the request.");
                 throw new InvalidUserFieldException("The configured user field {$userField} is not provided in the request.");
-            } //End if
+            }
         } //Loop ends
 
         //Register the user in Cognito
@@ -57,6 +57,6 @@ trait RegistersUsers
         $password = $request->has('password')?$request['password']:null;
 
         return app()->make(AwsCognitoClient::class)->inviteUser($request[$userKey], $password, $attributes, $clientMetadata);
-    } //Function ends
+    }
 
 } //Trait ends

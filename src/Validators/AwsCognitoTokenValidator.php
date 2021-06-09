@@ -40,7 +40,7 @@ class AwsCognitoTokenValidator
 
         if (count($parts) !== 3) {
             throw new InvalidTokenException('Wrong number of segments');
-        } //End if
+        }
 
         $parts = array_filter(array_map('trim', $parts));
 
@@ -49,6 +49,6 @@ class AwsCognitoTokenValidator
         }
 
         return $token;
-    } //Function ends
+    }
 
 } //Class ends

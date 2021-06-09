@@ -1,0 +1,85 @@
+name: 'CI/CD'
+on:
+  push:
+
+jobs:
+  cancel-previous-builds:
+    timeout-minutes: 3
+    runs-on: ubuntu-20.04
+    if: github.ref != 'refs/heads/master'
+    steps:
+      - name: Check Previous
+        uses: rokroskar/workflow-run-cleanup-action@master
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+  php-cs-fixer:
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repo
+        if: github.ref != 'refs/heads/master'
+        uses: actions/checkout@v2
+        with:
+          token: ${{ github.token }}
+      - name: Cache .php_cs.cache
+        if: github.ref != 'refs/heads/master'
+        uses: actions/cache@v2
+        with:
+          path: ./.php_cs.cache
+          key: php-cs-cache
+      - name: Run php-cs-fixer
+        if: github.ref != 'refs/heads/master'
+        uses: docker://oskarstark/php-cs-fixer-ga
+      - name: Apply fixes
+        if: github.ref != 'refs/heads/master'
+        uses: stefanzweifel/git-auto-commit-action@v4.0.0
+        with:
+          commit_message: Apply php-cs-fixer changes
+          branch: ${{ github.head_ref }}
+          token: ${{ github.token }}
+
+  phpunit-laravel:
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    needs:
+      - php-cs-fixer
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Installing PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          coverage: pcov
+          extensions: pdo_mysql, mysql
+
+      - name: Setup .env
+        run: cp .env.github-ci .env
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Composer Install
+        run: composer install --prefer-dist --optimize-autoloader --no-progress --dev --no-suggest --ansi --no-interaction --ignore-platform-reqs --classmap-authoritative
+
+      - name: Unit Tests & Generate Coverage Report
+        run: composer test
+
+      - name: Archive Laravel log for debugging failures
+        uses: actions/upload-artifact@master
+        if: failure()
+        with:
+          name: laravel-log
+          path: storage/logs/laravel*.log

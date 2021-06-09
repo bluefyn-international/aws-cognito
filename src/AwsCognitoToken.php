@@ -43,7 +43,7 @@ class AwsCognitoToken
     public function get()
     {
         return $this->token;
-    } //Function ends
+    }
 
 
     /**
@@ -54,6 +54,6 @@ class AwsCognitoToken
     public function __toString()
     {
         return $this->get();
-    } //Function ends
+    }
 
 } //Class ends

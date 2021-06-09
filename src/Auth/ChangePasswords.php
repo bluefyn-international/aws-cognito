@@ -45,10 +45,10 @@ trait ChangePasswords
 
             if ($validator->fails()) {
                 throw new ValidationException($validator);
-            } //End if
+            }
 
             $request = collect($request->all());
-        } //End if
+        }
 
         //Create AWS Cognito Client
         $client = app()->make(AwsCognitoClient::class);
@@ -64,15 +64,15 @@ trait ChangePasswords
                 $response = response()->json(['error' => 'cognito.validation.reset_required.invalid_request'], 400);
             } else {
                 $response = $this->changePassword($client, $request, $paramUsername, $passwordOld, $passwordNew);
-            } //End if
-        } //End if
+            }
+        }
 
         return $response;
 
         // return $response == Password::PASSWORD_RESET
         //     ? $this->sendResetResponse($request, $response)
         //     : $this->sendResetFailedResponse($request, $response);
-    } //Function ends
+    }
 
 
 
@@ -93,7 +93,7 @@ trait ChangePasswords
         $login = $client->authenticate($request[$paramUsername], $request[$passwordOld]);
 
         return $client->confirmPassword($request[$paramUsername], $request[$passwordNew], $login->get('Session'));
-    } //Function ends
+    }
 
 
 
@@ -114,7 +114,7 @@ trait ChangePasswords
         $login = $client->authenticate($request[$paramUsername], $request[$passwordOld]);
 
         return $client->changePassword($login['AuthenticationResult']['AccessToken'], $request[$passwordOld], $request[$passwordNew]);
-    } //Function ends
+    }
 
 
     /**
@@ -131,7 +131,7 @@ trait ChangePasswords
         return view('vendor.black-bits.laravel-cognito-auth.reset-password')->with(
             ['email' => $request->email]
         );
-    } //Function ends
+    }
 
 
     /**
@@ -146,6 +146,6 @@ trait ChangePasswords
             'password'  => 'string|min:8',
             'new_password' => 'required|confirmed|min:8',
         ];
-    } //Function ends
+    }
 
 } //Trait ends

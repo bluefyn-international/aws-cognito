@@ -62,7 +62,7 @@ trait AuthenticatesUsers
 
             if (config('cognito.add_missing_local_user_sso')) {
                 $response = $this->createLocalUser($credentials);
-            } //End if
+            }
             
             return $this->sendFailedLoginResponse($request, $e, $isJsonResponse);
         } catch (CognitoIdentityProviderException $e) {
@@ -71,10 +71,10 @@ trait AuthenticatesUsers
         } catch (Exception $e) {
             Log::error('AuthenticatesUsers:attemptLogin:Exception');
             return $this->sendFailedLoginResponse($request, $e, $isJsonResponse);
-        } //Try-catch ends
+        }
 
         return $claim;
-    } //Function ends
+    }
 
 
     /**
@@ -86,7 +86,7 @@ trait AuthenticatesUsers
     protected function createLocalUser($credentials)
     {
         return true;
-    } //Function ends
+    }
 
 
     /**
@@ -99,24 +99,25 @@ trait AuthenticatesUsers
         throw ValidationException::withMessages([
             $this->username() => $exception->getAwsErrorMessage(),
         ]);
-    } //Function ends
+    }
 
 
     /**
-     * Handle Generic Exception
-     * 
-     * @param  \Collection $request
-     * @param  \Exception $exception
+     * @param Collection     $request
+     * @param Exception|null $exception
+     * @param bool           $isJsonResponse
+     *
+     * @return mixed
      */
-    private function sendFailedLoginResponse(Collection $request, Exception $exception=null, bool $isJsonResponse=false)
+    private function sendFailedLoginResponse(Collection $request, ?Exception $exception=null, bool $isJsonResponse=false)
     {
         $message = 'FailedLoginResponse';
         if (!empty($exception)) {
             $message = $exception->getMessage();
-        } //End if
+        }
 
         if ($isJsonResponse) {
-            return  response()->json([
+            return response()->json([
                 'error' => 'cognito.validation.auth.failed', 
                 'message' => $message 
             ], 400);
@@ -125,9 +126,9 @@ trait AuthenticatesUsers
                 ->withErrors([
                     'username' => $message,
                 ]);
-        } //End if
+        }
         
         throw new HttpException(400, $message);
-    } //Function ends
+    }
 
 } //Trait ends
