@@ -90,4 +90,4 @@ class AuthHeaders //implements ParserContract
         return $this;
     }
 
-} //Class ends
+}

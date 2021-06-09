@@ -131,4 +131,4 @@ trait AuthenticatesUsers
         throw new HttpException(400, $message);
     }
 
-} //Trait ends
+}

@@ -25,13 +25,15 @@ trait RegistersUsers
 {
 
     /**
-     * Handle a registration request for the application.
+     * @param Collection  $request
+     * @param array|null  $clientMetadata
+     * @param string|null $actionMethod
      *
-     * @param  \Illuminate\Support\Collection  $request
-     * @return \Illuminate\Http\Response
+     * @return mixed
+     *
      * @throws InvalidUserFieldException
      */
-    public function createCognitoUser(Collection $request, array $clientMetadata=null)
+    public function createCognitoUser(Collection $request, array $clientMetadata=null, ?string $actionMethod = null)
     {
         //Initialize Cognito Attribute array
         $attributes = [];
@@ -48,15 +50,15 @@ trait RegistersUsers
                 Log::error("The configured user field {$userField} is not provided in the request.");
                 throw new InvalidUserFieldException("The configured user field {$userField} is not provided in the request.");
             }
-        } //Loop ends
+        }
 
         //Register the user in Cognito
-        $userKey = $request->has('username')?'username':'email';
+        $userKey = $request->has('username') ? 'username' : 'email';
 
         //Temporary Password paramter
-        $password = $request->has('password')?$request['password']:null;
+        $password = $request->has('password') ? $request['password'] : null;
 
-        return app()->make(AwsCognitoClient::class)->inviteUser($request[$userKey], $password, $attributes, $clientMetadata);
+        return app()->make(AwsCognitoClient::class)->inviteUser($request[$userKey], $password, $attributes, $clientMetadata, $actionMethod);
     }
 
-} //Trait ends
+}

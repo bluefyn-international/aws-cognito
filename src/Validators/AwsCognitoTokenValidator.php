@@ -51,4 +51,4 @@ class AwsCognitoTokenValidator
         return $token;
     }
 
-} //Class ends
+}

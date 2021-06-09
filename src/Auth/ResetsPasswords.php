@@ -100,4 +100,4 @@ trait ResetsPasswords
         ];
     }
 
-} //Trait ends
+}

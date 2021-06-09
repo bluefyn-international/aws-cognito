@@ -14,9 +14,7 @@ namespace Ellaisys\Cognito;
 use Aws\Result as AwsResult;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Auth\Authenticatable;
-
 use Ellaisys\Cognito\Validators\AwsCognitoTokenValidator;
-
 use Exception;
 
 class AwsCognitoClaim
@@ -33,33 +31,30 @@ class AwsCognitoClaim
      */
     public $data;
 
-
     /**
      * @var string
      */
     public $username;
-
 
     /**
      * @var \Illuminate\Contracts\Auth\Authenticatable
      */
     public $user;
 
-
     /**
      * @var \mixed
      */
     public $sub;
 
-
     /**
-     * Create a new JSON Web Token.
+     * AwsCognitoClaim constructor.
+     * @param AwsResult            $result
+     * @param Authenticatable|null $user
+     * @param string               $username
      *
-     * @param  string  $token
-     *
-     * @return void
+     * @throws Exception
      */
-    public function __construct(AwsResult $result, Authenticatable $user=null, string $username)
+    public function __construct(AwsResult $result, ?Authenticatable $user = null, string $username)
     {
         try {
             $authResult = $result['AuthenticationResult'];
@@ -92,7 +87,6 @@ class AwsCognitoClaim
         return $this->token;
     }
 
-
     /**
      * Get the data.
      *
@@ -102,7 +96,6 @@ class AwsCognitoClaim
     {
         return $this->data;
     }
-
 
     /**
      * Get the User.
@@ -114,7 +107,6 @@ class AwsCognitoClaim
         return $this->user;
     }
 
-
     /**
      * Get the Sub Data.
      *
@@ -125,7 +117,6 @@ class AwsCognitoClaim
         return $this->sub;
     }
 
-
     /**
      * Get the token when casting to string.
      *
@@ -135,5 +126,4 @@ class AwsCognitoClaim
     {
         return $this->getToken();
     }
-
-} //Class ends
+}

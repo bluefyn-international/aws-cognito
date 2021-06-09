@@ -14,7 +14,6 @@ namespace Ellaisys\Cognito;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Password;
-
 use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
 use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;
 
@@ -27,14 +26,12 @@ class AwsCognitoClient
      */
     const USER_STATUS_CONFIRMED = 'CONFIRMED';
     
-    
     /**
      * Constant representing the user needs a new password.
      *
      * @var string
      */
     const NEW_PASSWORD_CHALLENGE = 'NEW_PASSWORD_REQUIRED';
-
 
     /**
      * Constant representing the user needs to reset password.
@@ -43,14 +40,12 @@ class AwsCognitoClient
      */
     const RESET_REQUIRED_PASSWORD = 'RESET_REQUIRED';
 
-
     /**
      * Constant representing the force new password status.
      *
      * @var string
      */
     const FORCE_CHANGE_PASSWORD = 'FORCE_CHANGE_PASSWORD';
-
 
     /**
      * Constant representing the password reset required exception.
@@ -59,14 +54,12 @@ class AwsCognitoClient
      */
     const RESET_REQUIRED = 'PasswordResetRequiredException';
 
-
     /**
      * Constant representing the user not found exception.
      *
      * @var string
      */
     const USER_NOT_FOUND = 'UserNotFoundException';
-
 
     /**
      * Constant representing the username exists exception.
@@ -75,7 +68,6 @@ class AwsCognitoClient
      */
     const USERNAME_EXISTS = 'UsernameExistsException';
 
-
     /**
      * Constant representing the invalid password exception.
      *
@@ -83,14 +75,12 @@ class AwsCognitoClient
      */
     const INVALID_PASSWORD = 'InvalidPasswordException';
 
-
     /**
      * Constant representing the code mismatch exception.
      *
      * @var string
      */
     const CODE_MISMATCH = 'CodeMismatchException';
-
 
     /**
      * Constant representing the expired code exception.
@@ -108,30 +98,25 @@ class AwsCognitoClient
 
     const ACTION_METHOD_RESEND = 'RESEND';
 
-
     /**
      * @var CognitoIdentityProviderClient
      */
-    protected $client;
-
-
-    /**
-     * @var string
-     */
-    protected $clientId;
-
+    protected CognitoIdentityProviderClient $client;
 
     /**
      * @var string
      */
-    protected $clientSecret;
-
+    protected string $clientId;
 
     /**
      * @var string
      */
-    protected $poolId;
+    protected string $clientSecret;
 
+    /**
+     * @var string
+     */
+    protected string $poolId;
 
     /**
      * AwsCognitoClient constructor.
@@ -164,20 +149,16 @@ class AwsCognitoClient
      */
     public function authenticate($username, $password)
     {
-        try {
-            $response = $this->client->adminInitiateAuth([
-                'AuthFlow' => 'ADMIN_NO_SRP_AUTH',
-                'AuthParameters' => [
-                    'USERNAME' => $username,
-                    'PASSWORD' => $password,
-                    'SECRET_HASH' => $this->cognitoSecretHash($username),
-                ],
-                'ClientId' => $this->clientId,
-                'UserPoolId' => $this->poolId,
-            ]);
-        } catch (CognitoIdentityProviderException $exception) {
-            throw $exception;
-        }
+        $response = $this->client->adminInitiateAuth([
+            'AuthFlow' => 'ADMIN_NO_SRP_AUTH',
+            'AuthParameters' => [
+                'USERNAME' => $username,
+                'PASSWORD' => $password,
+                'SECRET_HASH' => $this->cognitoSecretHash($username),
+            ],
+            'ClientId' => $this->clientId,
+            'UserPoolId' => $this->poolId,
+        ]);
 
         return $response;
     }
@@ -194,7 +175,6 @@ class AwsCognitoClient
      */
     public function register($username, $password, array $attributes = [])
     {
-
         try {
             $response = $this->client->signUp([
                 'ClientId' => $this->clientId,
@@ -220,10 +200,11 @@ class AwsCognitoClient
      * @see https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_ForgotPassword.html
      *
      * @param string $username
-     * @param array $clientMetadata (optional)
+     * @param array|null $clientMetadata (optional)
+     *
      * @return string
      */
-    public function sendResetLink($username, array $clientMetadata=null)
+    public function sendResetLink(string $username, ?array $clientMetadata=null) : string
     {
         try {
             //Build payload
@@ -254,13 +235,12 @@ class AwsCognitoClient
      * @param string $code
      * @param string $username
      * @param string $password
+     *
      * @return string
      */
-    public function resetPassword($code, $username, $password)
+    public function resetPassword(string $code, string $username, string $password) : string
     {
         try {
-
-
             $this->client->confirmForgotPassword([
                 'ClientId' => $this->clientId,
                 'ConfirmationCode' => $code,
@@ -301,7 +281,7 @@ class AwsCognitoClient
         string $username,
         string $password = null,
         array $attributes = [],
-        array $clientMetadata = null,
+        ?array $clientMetadata = null,
         ?string $actionMethod = null
     ) : bool {
         //Force validate email
@@ -359,7 +339,7 @@ class AwsCognitoClient
      * @param string $session
      * @return bool
      */
-    public function confirmPassword($username, $password, $session)
+    public function confirmPassword(string $username, string $password, string $session)
     {
         try {
             $this->client->AdminRespondToAuthChallenge([
@@ -390,7 +370,7 @@ class AwsCognitoClient
      *
      * @see https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-cognito-idp-2016-04-18.html#admindeleteuser
      */
-    public function deleteUser($username)
+    public function deleteUser(string $username)
     {
         if (config('cognito.delete_user')) {
             $this->client->adminDeleteUser([
@@ -408,10 +388,11 @@ class AwsCognitoClient
      *
      * @param string $username
      * @param string $password
-     * @param bool $permanent
-     * @return bool
+     * @param bool   $permanent
+     *
+     * @return string
      */
-    public function setUserPassword($username, $password, $permanent = true)
+    public function setUserPassword(string $username, string $password, bool $permanent = true) : string
     {
         try {
             $this->client->adminSetUserPassword([
@@ -444,7 +425,8 @@ class AwsCognitoClient
      * @param string $accessToken
      * @param string $passwordOld
      * @param string $passwordNew
-     * @return bool
+     *
+     * @return bool|string
      */
     public function changePassword(string $accessToken, string $passwordOld, string $passwordNew)
     {
@@ -469,7 +451,10 @@ class AwsCognitoClient
     }
 
 
-    public function invalidatePassword($username)
+    /**
+     * @param string $username
+     */
+    public function invalidatePassword(string $username)
     {
         $this->client->adminResetUserPassword([
             'UserPoolId' => $this->poolId,
@@ -477,8 +462,10 @@ class AwsCognitoClient
         ]);
     }
 
-
-    public function confirmSignUp($username)
+    /**
+     * @param string $username
+     */
+    public function confirmSignUp(string $username)
     {
         $this->client->adminConfirmSignUp([
             'UserPoolId' => $this->poolId,
@@ -487,7 +474,13 @@ class AwsCognitoClient
     }
 
 
-    public function confirmUserSignUp($username, $confirmationCode)
+    /**
+     * @param string $username
+     * @param string $confirmationCode
+     *
+     * @return string
+     */
+    public function confirmUserSignUp(string $username, string $confirmationCode) : string
     {
         try {
             $this->client->confirmSignUp([
@@ -517,8 +510,12 @@ class AwsCognitoClient
         }
     }
 
-
-    public function resendToken($username)
+    /**
+     * @param string $username
+     *
+     * @return string
+     */
+    public function resendToken(string $username) : string
     {
         try {
             $this->client->resendConfirmationCode([
@@ -551,10 +548,11 @@ class AwsCognitoClient
      * http://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AdminUpdateUserAttributes.html.
      *
      * @param string $username
-     * @param array $attributes
+     * @param array  $attributes
+     *
      * @return bool
      */
-    public function setUserAttributes($username, array $attributes)
+    public function setUserAttributes($username, array $attributes) : bool
     {
         $this->client->AdminUpdateUserAttributes([
             'Username' => $username,
@@ -569,9 +567,10 @@ class AwsCognitoClient
     /**
      * Creates the Cognito secret hash.
      * @param string $username
+     *
      * @return string
      */
-    protected function cognitoSecretHash($username)
+    protected function cognitoSecretHash(string $username) : string
     {
         return $this->hash($username . $this->clientId);
     }
@@ -581,9 +580,10 @@ class AwsCognitoClient
      * Creates a HMAC from a string.
      *
      * @param string $message
+     *
      * @return string
      */
-    protected function hash($message)
+    protected function hash(string $message) : string
     {
         $hash = hash_hmac(
             'sha256',
@@ -601,17 +601,18 @@ class AwsCognitoClient
      * http://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_GetUser.html.
      *
      * @param string $username
+     *
      * @return mixed
      */
-    public function getUser($username)
+    public function getUser(string $username)
     {
         try {
             $user = $this->client->AdminGetUser([
-                'Username' => $username,
+                'Username'   => $username,
                 'UserPoolId' => $this->poolId,
             ]);
         } catch (CognitoIdentityProviderException $e) {
-            return false;
+            return null;
         }
 
         return $user;
@@ -622,9 +623,10 @@ class AwsCognitoClient
      * Format attributes in Name/Value array.
      *
      * @param array $attributes
+     *
      * @return array
      */
-    protected function formatAttributes(array $attributes)
+    protected function formatAttributes(array $attributes) : array
     {
         $userAttributes = [];
 
@@ -633,7 +635,7 @@ class AwsCognitoClient
                 'Name' => $key,
                 'Value' => $value,
             ];
-        } //Loop ends
+        }
 
         return $userAttributes;
     }
@@ -642,10 +644,12 @@ class AwsCognitoClient
     /**
      * Build Client Metadata to be forwarded to Cognito.
      *
-     * @param array $attributes
-     * @return array $clientMetadata (optional)
+     * @param array      $attributes
+     * @param array|null $clientMetadata
+     *
+     * @return array|null
      */
-    protected function buildClientMetadata(array $attributes, array $clientMetadata=null)
+    protected function buildClientMetadata(array $attributes, ?array $clientMetadata = null) : ?array
     {
         if (!empty($clientMetadata)) {
             $userAttributes = array_merge($attributes, $clientMetadata);
@@ -656,4 +660,4 @@ class AwsCognitoClient
         return $userAttributes;
     }
     
-} //Class ends
+}

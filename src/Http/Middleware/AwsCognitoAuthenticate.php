@@ -55,4 +55,4 @@ class AwsCognitoAuthenticate extends BaseMiddleware
         }
     }
 
-} //Class ends
+}

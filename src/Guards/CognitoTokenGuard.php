@@ -305,4 +305,4 @@ class CognitoTokenGuard extends TokenGuard
         return $this->user = $this->provider->retrieveById($claim['sub']);
 	}
 
-} //Class ends
+}

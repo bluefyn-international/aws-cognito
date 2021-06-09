@@ -210,4 +210,4 @@ class AwsCognitoServiceProvider extends ServiceProvider
         });
     }
     
-} //Class ends
+}

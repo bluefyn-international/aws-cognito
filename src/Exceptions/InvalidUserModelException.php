@@ -32,4 +32,4 @@ class InvalidUserModelException extends Exception
         return parent::render($request, $exception);
     }
     
-} //Class ends
+}

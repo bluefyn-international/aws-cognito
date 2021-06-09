@@ -148,4 +148,4 @@ trait ChangePasswords
         ];
     }
 
-} //Trait ends
+}

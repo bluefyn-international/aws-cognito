@@ -30,4 +30,4 @@ class AwsCognitoException extends Exception
         return parent::render($request, $exception);
     }
     
-} //Class ends
+}

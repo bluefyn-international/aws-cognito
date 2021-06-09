@@ -194,4 +194,4 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
         }
     }
 
-} //Class ends
+}

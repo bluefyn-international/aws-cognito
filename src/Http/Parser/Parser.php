@@ -95,7 +95,7 @@ class Parser
             if ($response = $parser->parse($this->request)) {
                 return $response;
             }
-        } //Loop ends
+        }
     }
 
 
@@ -124,4 +124,4 @@ class Parser
         return $this;
     }
 
-} //Class ends
+}

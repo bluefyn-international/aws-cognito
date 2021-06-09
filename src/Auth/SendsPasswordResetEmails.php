@@ -75,4 +75,4 @@ trait SendsPasswordResetEmails
         return ($response == Password::RESET_LINK_SENT);
     }
     
-} //Trait ends
+}

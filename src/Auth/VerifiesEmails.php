@@ -94,4 +94,4 @@ trait VerifiesEmails
         return response()->json(['success' => 'true']);
     }
     
-} //Trait ends
+}

@@ -32,4 +32,4 @@ class NoLocalUserException extends Exception
         return parent::render($request, $exception);
     }
     
-} //Class ends
+}
