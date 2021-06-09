@@ -12,11 +12,11 @@
 namespace Ellaisys\Cognito\Http\Parser;
 
 use Illuminate\Http\Request;
+
 //use Ellaisys\Cognito\Contracts\Http\Parser as ParserContract;
 
 class AuthHeaders //implements ParserContract
 {
-    
     /**
      * The header name.
      *
@@ -36,7 +36,7 @@ class AuthHeaders //implements ParserContract
     /**
      * Attempt to parse the token from some other possible headers.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return null|string
      */
@@ -49,7 +49,7 @@ class AuthHeaders //implements ParserContract
     /**
      * Try to parse the token from the request header.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return null|string
      */
@@ -57,7 +57,7 @@ class AuthHeaders //implements ParserContract
     {
         $header = $request->headers->get($this->header) ?: $this->fromAltHeaders($request);
 
-        if ($header && preg_match('/'.$this->prefix.'\s*(\S+)\b/i', $header, $matches)) {
+        if ($header && preg_match('/' . $this->prefix . '\s*(\S+)\b/i', $header, $matches)) {
             return $matches[1];
         }
     }
@@ -66,13 +66,14 @@ class AuthHeaders //implements ParserContract
     /**
      * Set the header name.
      *
-     * @param  string  $headerName
+     * @param string $headerName
      *
      * @return $this
      */
     public function setHeaderName($headerName)
     {
         $this->header = $headerName;
+
         return $this;
     }
 
@@ -80,14 +81,14 @@ class AuthHeaders //implements ParserContract
     /**
      * Set the header prefix.
      *
-     * @param  string  $headerPrefix
+     * @param string $headerPrefix
      *
      * @return $this
      */
     public function setHeaderPrefix($headerPrefix)
     {
         $this->prefix = $headerPrefix;
+
         return $this;
     }
-
-} //Class ends
+}

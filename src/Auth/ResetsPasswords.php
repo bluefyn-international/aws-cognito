@@ -11,33 +11,27 @@
 
 namespace Ellaisys\Cognito\Auth;
 
+use Ellaisys\Cognito\AwsCognitoClient;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
+
 use Illuminate\Support\Facades\Validator;
 
-use Ellaisys\Cognito\AwsCognitoClient;
-
-use Exception;
 use Illuminate\Validation\ValidationException;
-use Ellaisys\Cognito\Exceptions\InvalidUserFieldException;
-use Ellaisys\Cognito\Exceptions\AwsCognitoException;
 
 trait ResetsPasswords
 {
-
     /**
      * Reset the given user's password.
      *
-     * @param  \Illuminate\Http\Request|Illuminate\Support\Collection  $request
-     * @param  string  $paramUsername (optional)
-     * @param  string  $paramToken (optional)
-     * @param  string  $passwordNew (optional)
-     * 
+     * @param \Illuminate\Http\Request|Illuminate\Support\Collection $request
+     * @param string                                                 $paramUsername (optional)
+     * @param string                                                 $paramToken    (optional)
+     * @param string                                                 $passwordNew   (optional)
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function reset($request, string $paramUsername='email', string $paramToken='token', string $passwordNew='password')
+    public function reset($request, string $paramUsername = 'email', string $paramToken = 'token', string $passwordNew = 'password')
     {
         if ($request instanceof Request) {
             //Validate request
@@ -73,14 +67,15 @@ trait ResetsPasswords
      *
      * If no token is present, display the link request form.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string|null  $token
+     * @param \Illuminate\Http\Request $request
+     * @param string|null              $token
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showResetForm(Request $request, $token = null)
     {
         return view('vendor.black-bits.laravel-cognito-auth.reset-password')->with(
-            ['email' => $request->email]
+            ['email' => $request->email],
         );
     }
 
@@ -99,5 +94,4 @@ trait ResetsPasswords
             'password' => 'required|confirmed|min:8',
         ];
     }
-
-} //Trait ends
+}

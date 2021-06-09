@@ -2,10 +2,10 @@
 
 namespace Ellaisys\Cognito\Exceptions;
 
-use Throwable;
-
 use Exception;
+
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Throwable;
 
 class InvalidUserModelException extends Exception
 {
@@ -23,13 +23,13 @@ class InvalidUserModelException extends Exception
     /**
      * Render the exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
+     * @param \Illuminate\Http\Request $request
+     * @param \Throwable               $exception
+     *
      * @return \Illuminate\Http\Response
      */
     public function render($request, Throwable $exception)
     {
         return parent::render($request, $exception);
     }
-    
-} //Class ends
+}

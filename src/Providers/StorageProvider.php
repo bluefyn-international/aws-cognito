@@ -47,11 +47,11 @@ class StorageProvider
     /**
      * Constructor.
      *
-     * @param  \Illuminate\Contracts\Cache\Repository  $cache
+     * @param \Illuminate\Contracts\Cache\Repository $cache
      *
      * @return void
      */
-    public function __construct(string $provider='file')
+    public function __construct(string $provider = 'file')
     {
         $this->cache = Cache::store($provider);
         $this->supportsTags = false;
@@ -61,20 +61,20 @@ class StorageProvider
     /**
      * Add a new item into storage.
      *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @param  int  $minutes
+     * @param string $key
+     * @param mixed  $value
+     * @param int    $minutes
      *
      * @return void
      */
-    public function add($key, $value, $duration=3600)
+    public function add($key, $value, $duration = 3600)
     {
         // If the laravel version is 5.8 or higher then convert minutes to seconds.
         if ($this->laravelVersion !== null
             && is_int($minutes)
             && version_compare($this->laravelVersion, '5.8', '<')
         ) {
-            $duration = ($duration/60);
+            $duration = ($duration / 60);
         }
 
         $this->cache()->put($key, $value, $duration);
@@ -84,8 +84,8 @@ class StorageProvider
     /**
      * Add a new item into storage forever.
      *
-     * @param  string  $key
-     * @param  mixed  $value
+     * @param string $key
+     * @param mixed  $value
      *
      * @return void
      */
@@ -98,7 +98,7 @@ class StorageProvider
     /**
      * Check for an item in storage.
      *
-     * @param  string  $key
+     * @param string $key
      *
      * @return bool
      */
@@ -111,7 +111,7 @@ class StorageProvider
     /**
      * Get an item from storage.
      *
-     * @param  string  $key
+     * @param string $key
      *
      * @return mixed
      */
@@ -124,7 +124,7 @@ class StorageProvider
     /**
      * Remove an item from storage.
      *
-     * @param  string  $key
+     * @param string $key
      *
      * @return bool
      */
@@ -208,5 +208,4 @@ class StorageProvider
             }
         }
     }
-    
-} //Class ends
+}

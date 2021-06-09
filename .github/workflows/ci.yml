@@ -55,9 +55,6 @@ jobs:
           coverage: pcov
           extensions: pdo_mysql, mysql
 
-      - name: Setup .env
-        run: cp .env.github-ci .env
-
       - name: Get Composer Cache Directory
         id: composer-cache
         run: |

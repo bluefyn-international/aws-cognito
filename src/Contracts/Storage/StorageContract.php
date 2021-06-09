@@ -13,11 +13,10 @@ namespace Ellaisys\Cognito\Contracts\Storage;
 
 interface StorageContract
 {
-    
     /**
-     * @param  string  $key
-     * @param  mixed  $value
-     * @param  int  $minutes
+     * @param string $key
+     * @param mixed  $value
+     * @param int    $minutes
      *
      * @return void
      */
@@ -25,8 +24,8 @@ interface StorageContract
 
 
     /**
-     * @param  string  $key
-     * @param  mixed  $value
+     * @param string $key
+     * @param mixed  $value
      *
      * @return void
      */
@@ -34,7 +33,7 @@ interface StorageContract
 
 
     /**
-     * @param  string  $key
+     * @param string $key
      *
      * @return mixed
      */
@@ -42,7 +41,7 @@ interface StorageContract
 
 
     /**
-     * @param  string  $key
+     * @param string $key
      *
      * @return bool
      */

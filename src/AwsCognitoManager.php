@@ -11,13 +11,7 @@
 
 namespace Ellaisys\Cognito;
 
-use Ellaisys\Cognito\AwsCognitoToken;
-use Ellaisys\Cognito\AwsCognitoClaim;
 use Ellaisys\Cognito\Providers\StorageProvider;
-
-use Exception;
-use Ellaisys\Cognito\Exceptions\AwsCognitoException;
-use Ellaisys\Cognito\Exceptions\TokenBlacklistedException;
 
 class AwsCognitoManager
 {
@@ -28,14 +22,12 @@ class AwsCognitoManager
      */
     protected $provider;
 
-
     /**
      * The blacklist.
      *
      * @var \Tymon\JWTAuth\Blacklist
      */
     protected $blacklist;
-
 
     /**
      * The AWS Cognito token.
@@ -44,37 +36,31 @@ class AwsCognitoManager
      */
     protected $token;
 
-
     /**
-     * The AwsCognito Claim token
-     * 
+     * The AwsCognito Claim token.
+     *
      * @var \Ellaisys\Cognito\AwsCognitoClaim|null
      */
     protected $claim;
 
-
     /**
-     * Constructor.
+     * AwsCognitoManager constructor.
      *
-     * @param  \Ellaisys\Cognito\Providers\StorageProvider  $provider
-     * @param  \Tymon\JWTAuth\Blacklist  $blacklist
-     * @param  \Tymon\JWTAuth\Factory  $payloadFactory
-     *
-     * @return void
+     * @param StorageProvider               $provider
+     * @param null|\Tymon\JWTAuth\Blacklist $blacklist
      */
-    public function __construct(StorageProvider $provider, $blacklist=null)
+    public function __construct(StorageProvider $provider, $blacklist = null)
     {
         $this->provider = $provider;
         $this->blacklist = $blacklist;
     }
 
-
     /**
-     * Encode the claim.
+     * @param \Ellaisys\Cognito\AwsCognitoClaim $claim
      *
-     * @return \AwsCognitoManager
+     * @return $this
      */
-    public function encode(AwsCognitoClaim $claim)
+    public function encode(AwsCognitoClaim $claim) : self
     {
         $this->claim = $claim;
         $this->token = $claim->getToken();
@@ -84,25 +70,21 @@ class AwsCognitoManager
 
 
     /**
-     * Decode token.
-     *
-     * @return \boolean
+     * @return \Ellaisys\Cognito\AwsCognitoClaim|null
      */
     public function decode()
     {
-        return ($this->claim)?$this->claim:null;
+        return ($this->claim) ? $this->claim : null;
     }
 
 
     /**
-     * Persist token.
-     *
-     * @return \boolean
+     * @return bool
      */
-    public function store()
+    public function store() : bool
     {
         $data = $this->claim->getData();
-        $durationInSecs = ($data)?(int) $data['ExpiresIn']:3600;
+        $durationInSecs = ($data) ? (int) $data['ExpiresIn'] : 3600;
         $this->provider->add($this->token, json_encode($this->claim), $durationInSecs);
 
         return true;
@@ -110,30 +92,29 @@ class AwsCognitoManager
 
 
     /**
-     * Get Token from store.
+     * @param string $token
      *
-     * @return \AwsCognitoManager
+     * @return $this
      */
-    public function fetch(string $token)
+    public function fetch(string $token) : self
     {
         $this->token = $token;
         $claim = $this->provider->get($token);
-        $this->claim = $claim?json_decode($claim, true):null;
+        $this->claim = $claim ? json_decode($claim, true) : null;
 
         return $this;
     }
 
 
     /**
-     * Release token.
+     * @param string $token
      *
-     * @return \AwsCognitoManager
+     * @return $this
      */
-    public function release(string $token)
+    public function release(string $token) : self
     {
         $this->provider->destroy($token);
 
         return $this;
     }
-
-} //Class ends
+}

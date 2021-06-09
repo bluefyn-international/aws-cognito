@@ -11,21 +11,17 @@
 
 namespace Ellaisys\Cognito\Http\Middleware;
 
-use Closure;
-use Illuminate\Http\Request;
-use Illuminate\Auth\Middleware\Authenticate as Middleware;
-
 use Ellaisys\Cognito\AwsCognito;
+use Ellaisys\Cognito\Exceptions\NoTokenException;
 
 use Exception;
-use Ellaisys\Cognito\Exceptions\AwsCognitoException;
-use Ellaisys\Cognito\Exceptions\NoTokenException;
-use Ellaisys\Cognito\Exceptions\InvalidTokenException;
+
+use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 abstract class BaseMiddleware //extends Middleware
 {
-    
     /**
      * The Cognito Authenticator.
      *
@@ -37,7 +33,7 @@ abstract class BaseMiddleware //extends Middleware
     /**
      * Create a new BaseMiddleware instance.
      *
-     * @param  \Ellaisys\Cognito\AwsCognito  $cognito
+     * @param \Ellaisys\Cognito\AwsCognito $cognito
      *
      * @return void
      */
@@ -50,7 +46,7 @@ abstract class BaseMiddleware //extends Middleware
     /**
      * Check the request for the presence of a token.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      *
@@ -67,7 +63,7 @@ abstract class BaseMiddleware //extends Middleware
     /**
      * Attempt to authenticate a user via the token in the request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @throws \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
      *
@@ -90,17 +86,16 @@ abstract class BaseMiddleware //extends Middleware
     /**
      * Set the authentication header.
      *
-     * @param  \Illuminate\Http\Response|\Illuminate\Http\JsonResponse  $response
-     * @param  string|null  $token
+     * @param \Illuminate\Http\Response|\Illuminate\Http\JsonResponse $response
+     * @param string|null                                             $token
      *
      * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      */
     protected function setAuthenticationHeader($response, $token = null)
     {
         $token = $token ?: $this->cognito->refresh();
-        $response->headers->set('Authorization', 'Bearer '.$token);
+        $response->headers->set('Authorization', 'Bearer ' . $token);
 
         return $response;
     }
-
-} //Class ends
+}
