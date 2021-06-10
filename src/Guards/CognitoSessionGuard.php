@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Ellaisys\Cognito\Guards;
+namespace BluefynInternational\Cognito\Guards;
 
 use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;
 use Aws\Result as AwsResult;
-use Ellaisys\Cognito\AwsCognitoClient;
-use Ellaisys\Cognito\Exceptions\AwsCognitoException;
-use Ellaisys\Cognito\Exceptions\InvalidUserModelException;
-use Ellaisys\Cognito\Exceptions\NoLocalUserException;
+use BluefynInternational\Cognito\AwsCognitoClient;
+use BluefynInternational\Cognito\Exceptions\AwsCognitoException;
+use BluefynInternational\Cognito\Exceptions\InvalidUserModelException;
+use BluefynInternational\Cognito\Exceptions\NoLocalUserException;
 use Exception;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Contracts\Auth\Authenticatable;

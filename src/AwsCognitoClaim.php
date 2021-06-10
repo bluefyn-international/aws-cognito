@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Ellaisys\Cognito;
+namespace BluefynInternational\Cognito;
 
 use Aws\Result as AwsResult;
-use Ellaisys\Cognito\Validators\AwsCognitoTokenValidator;
+use BluefynInternational\Cognito\Validators\AwsCognitoTokenValidator;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 

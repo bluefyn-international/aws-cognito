@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Ellaisys\Cognito\Providers;
+namespace BluefynInternational\Cognito\Providers;
 
 use Illuminate\Support\Facades\Cache;
 use Psr\SimpleCache\CacheInterface as PsrCacheInterface;
@@ -28,7 +28,7 @@ class StorageProvider
      *
      * @var string
      */
-    protected $tag = 'ellaisys.aws.cognito';
+    protected $tag = 'bluefyninternational.aws.cognito';
 
     /**
      * @var bool

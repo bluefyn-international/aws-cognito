@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Ellaisys\Cognito;
+namespace BluefynInternational\Cognito;
 
-use Ellaisys\Cognito\Providers\StorageProvider;
+use BluefynInternational\Cognito\Providers\StorageProvider;
 
 class AwsCognitoManager
 {
     /**
      * The provider.
      *
-     * @var \Ellaisys\Cognito\Providers\StorageProvider
+     * @var \BluefynInternational\Cognito\Providers\StorageProvider
      */
     protected $provider;
 
@@ -39,7 +39,7 @@ class AwsCognitoManager
     /**
      * The AwsCognito Claim token.
      *
-     * @var \Ellaisys\Cognito\AwsCognitoClaim|null
+     * @var \BluefynInternational\Cognito\AwsCognitoClaim|null
      */
     protected $claim;
 
@@ -56,7 +56,7 @@ class AwsCognitoManager
     }
 
     /**
-     * @param \Ellaisys\Cognito\AwsCognitoClaim $claim
+     * @param \BluefynInternational\Cognito\AwsCognitoClaim $claim
      *
      * @return $this
      */
@@ -70,7 +70,7 @@ class AwsCognitoManager
 
 
     /**
-     * @return \Ellaisys\Cognito\AwsCognitoClaim|null
+     * @return \BluefynInternational\Cognito\AwsCognitoClaim|null
      */
     public function decode()
     {

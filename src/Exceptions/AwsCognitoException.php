@@ -1,6 +1,6 @@
 <?php
 
-namespace Ellaisys\Cognito\Exceptions;
+namespace BluefynInternational\Cognito\Exceptions;
 
 use Exception;
 use Throwable;

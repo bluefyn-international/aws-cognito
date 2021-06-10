@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Ellaisys\Cognito\Validators;
+namespace BluefynInternational\Cognito\Validators;
 
-use Ellaisys\Cognito\Exceptions\InvalidTokenException;
+use BluefynInternational\Cognito\Exceptions\InvalidTokenException;
 
 class AwsCognitoTokenValidator
 {

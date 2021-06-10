@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Ellaisys\Cognito;
+namespace BluefynInternational\Cognito;
 
 use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
 use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;

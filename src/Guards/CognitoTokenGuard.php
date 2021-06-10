@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Ellaisys\Cognito\Guards;
+namespace BluefynInternational\Cognito\Guards;
 
 use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;
 use Aws\Result as AwsResult;
-use Ellaisys\Cognito\AwsCognito;
-use Ellaisys\Cognito\AwsCognitoClaim;
-use Ellaisys\Cognito\AwsCognitoClient;
-use Ellaisys\Cognito\Exceptions\AwsCognitoException;
+use BluefynInternational\Cognito\AwsCognito;
+use BluefynInternational\Cognito\AwsCognitoClaim;
+use BluefynInternational\Cognito\AwsCognitoClient;
+use BluefynInternational\Cognito\Exceptions\AwsCognitoException;
 
-use Ellaisys\Cognito\Exceptions\InvalidUserModelException;
-use Ellaisys\Cognito\Exceptions\NoLocalUserException;
+use BluefynInternational\Cognito\Exceptions\InvalidUserModelException;
+use BluefynInternational\Cognito\Exceptions\NoLocalUserException;
 use Exception;
 
 use Illuminate\Auth\TokenGuard;
@@ -47,7 +47,7 @@ class CognitoTokenGuard extends TokenGuard
     /**
      * The AwsCognito instance.
      *
-     * @var \Ellaisys\Cognito\AwsCognito
+     * @var \BluefynInternational\Cognito\AwsCognito
      */
     protected $cognito;
 
@@ -55,7 +55,7 @@ class CognitoTokenGuard extends TokenGuard
     /**
      * The AwsCognito Claim token.
      *
-     * @var \Ellaisys\Cognito\AwsCognitoClaim|null
+     * @var \BluefynInternational\Cognito\AwsCognitoClaim|null
      */
     protected $claim;
 
@@ -262,7 +262,7 @@ class CognitoTokenGuard extends TokenGuard
      *
      * @param bool $forceForever
      *
-     * @return \Ellaisys\Cognito\AwsCognito
+     * @return \BluefynInternational\Cognito\AwsCognito
      */
     public function invalidate($forceForever = false)
     {

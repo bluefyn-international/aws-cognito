@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Ellaisys\Cognito;
+namespace BluefynInternational\Cognito;
 
-use Ellaisys\Cognito\Exceptions\AwsCognitoException;
-use Ellaisys\Cognito\Exceptions\InvalidTokenException;
-use Ellaisys\Cognito\Http\Parser\Parser;
+use BluefynInternational\Cognito\Exceptions\AwsCognitoException;
+use BluefynInternational\Cognito\Exceptions\InvalidTokenException;
+use BluefynInternational\Cognito\Http\Parser\Parser;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 class AwsCognito
@@ -21,35 +21,35 @@ class AwsCognito
     /**
      * The authentication provider.
      *
-     * @var \Ellaisys\Cognito\Contracts\Providers\Auth
+     * @var \BluefynInternational\Cognito\Contracts\Providers\Auth
      */
     protected $auth;
 
     /**
      * Aws Cognito Manager.
      *
-     * @var \Ellaisys\Cognito\AwsCognitoManager
+     * @var \BluefynInternational\Cognito\AwsCognitoManager
      */
     protected $manager;
 
     /**
      * The HTTP parser.
      *
-     * @var \Ellaisys\Cognito\Http\Parser\Parser
+     * @var \BluefynInternational\Cognito\Http\Parser\Parser
      */
     protected $parser;
 
     /**
      * The AwsCognito Claim token.
      *
-     * @var \Ellaisys\Cognito\AwsCognitoClaim|null
+     * @var \BluefynInternational\Cognito\AwsCognitoClaim|null
      */
     protected $claim;
 
     /**
      * The AWS Cognito token.
      *
-     * @var \Ellaisys\Cognito\AwsCognitoToken|string|null
+     * @var \BluefynInternational\Cognito\AwsCognitoToken|string|null
      */
     protected $token;
 

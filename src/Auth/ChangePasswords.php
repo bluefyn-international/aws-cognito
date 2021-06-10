@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Ellaisys\Cognito\Auth;
+namespace BluefynInternational\Cognito\Auth;
 
-use Ellaisys\Cognito\AwsCognitoClient;
+use BluefynInternational\Cognito\AwsCognitoClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
@@ -77,7 +77,7 @@ trait ChangePasswords
     /**
      * If a user is being forced to set a new password for the first time follow that flow instead.
      *
-     * @param \Ellaisys\Cognito\AwsCognitoClient $client
+     * @param \BluefynInternational\Cognito\AwsCognitoClient $client
      * @param \Illuminate\Support\Collection     $request
      * @param string                             $paramUsername
      * @param string                             $passwordOld
@@ -98,7 +98,7 @@ trait ChangePasswords
     /**
      * If a user is being forced to set a new password for the first time follow that flow instead.
      *
-     * @param \Ellaisys\Cognito\AwsCognitoClient $client
+     * @param \BluefynInternational\Cognito\AwsCognitoClient $client
      * @param \Illuminate\Support\Collection     $request
      * @param string                             $paramUsername
      * @param string                             $passwordOld

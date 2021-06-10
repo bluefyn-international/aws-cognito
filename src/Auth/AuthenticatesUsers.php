@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Ellaisys\Cognito\Auth;
+namespace BluefynInternational\Cognito\Auth;
 
 use Auth;
 use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;
-use Ellaisys\Cognito\Exceptions\NoLocalUserException;
+use BluefynInternational\Cognito\Exceptions\NoLocalUserException;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;

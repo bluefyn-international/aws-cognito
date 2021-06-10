@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Ellaisys\Cognito\Auth;
+namespace BluefynInternational\Cognito\Auth;
 
-use Ellaisys\Cognito\AwsCognitoClient;
+use BluefynInternational\Cognito\AwsCognitoClient;
 use Illuminate\Support\Collection;
 
 trait VerifiesEmails

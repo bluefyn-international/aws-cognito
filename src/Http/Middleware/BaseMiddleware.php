@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Ellaisys\Cognito\Http\Middleware;
+namespace BluefynInternational\Cognito\Http\Middleware;
 
-use Ellaisys\Cognito\AwsCognito;
-use Ellaisys\Cognito\Exceptions\NoTokenException;
+use BluefynInternational\Cognito\AwsCognito;
+use BluefynInternational\Cognito\Exceptions\NoTokenException;
 use Exception;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -22,14 +22,14 @@ abstract class BaseMiddleware
     /**
      * The Cognito Authenticator.
      *
-     * @var \Ellaisys\Cognito\AwsCognito
+     * @var \BluefynInternational\Cognito\AwsCognito
      */
     protected $cognito;
 
     /**
      * Create a new BaseMiddleware instance.
      *
-     * @param \Ellaisys\Cognito\AwsCognito $cognito
+     * @param \BluefynInternational\Cognito\AwsCognito $cognito
      *
      * @return void
      */
@@ -55,8 +55,8 @@ abstract class BaseMiddleware
      * @param Request $request
      *
      * @throws NoTokenException
-     * @throws \Ellaisys\Cognito\Exceptions\AwsCognitoException
-     * @throws \Ellaisys\Cognito\Exceptions\InvalidTokenException
+     * @throws \BluefynInternational\Cognito\Exceptions\AwsCognitoException
+     * @throws \BluefynInternational\Cognito\Exceptions\InvalidTokenException
      */
     public function authenticate(Request $request)
     {

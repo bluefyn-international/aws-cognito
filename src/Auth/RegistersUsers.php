@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Ellaisys\Cognito\Auth;
+namespace BluefynInternational\Cognito\Auth;
 
-use Ellaisys\Cognito\AwsCognitoClient;
-use Ellaisys\Cognito\Exceptions\InvalidUserFieldException;
+use BluefynInternational\Cognito\AwsCognitoClient;
+use BluefynInternational\Cognito\Exceptions\InvalidUserFieldException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 

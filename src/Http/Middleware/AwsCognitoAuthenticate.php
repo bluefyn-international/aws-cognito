@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Ellaisys\Cognito\Http\Middleware;
+namespace BluefynInternational\Cognito\Http\Middleware;
 
 use Closure;
-use Ellaisys\Cognito\Exceptions\InvalidTokenException;
-use Ellaisys\Cognito\Exceptions\NoTokenException;
+use BluefynInternational\Cognito\Exceptions\InvalidTokenException;
+use BluefynInternational\Cognito\Exceptions\NoTokenException;
 use Exception;
 use Illuminate\Http\Request;
 
