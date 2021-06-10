@@ -1,20 +1,21 @@
-<img src="https://www.ellaisys.com/wp-content/uploads/2020/11/eis_aws_cognito.png" width="100%" alt="EllaiSys AWS Cloud Capability"/>
-
 # Laravel Package to manage Web and API authentication with AWS Cognito
 AWS Cognito package using the AWS SDK for PHP
 
-![Latest Version on Packagist](https://img.shields.io/packagist/v/ellaisys/aws-cognito?style=flat-square)
-![Release Date](https://img.shields.io/github/release-date/ellaisys/aws-cognito?style=flat-square)
-![Total Downloads](https://img.shields.io/packagist/dt/ellaisys/aws-cognito?style=flat-square)
-![APM](https://img.shields.io/packagist/l/ellaisys/aws-cognito?style=flat-square)
+This package is a fork of ellaisys/aws-cognito but has undergone major changes and is targeted towards newer version of
+both PHP and Laravel.
+
+![Latest Version on Packagist](https://img.shields.io/packagist/v/bluefyn-international/aws-cognito?style=flat-square)
+![Release Date](https://img.shields.io/github/release-date/bluefyn-international/aws-cognito?style=flat-square)
+![Total Downloads](https://img.shields.io/packagist/dt/bluefyn-international/aws-cognito?style=flat-square)
+![APM](https://img.shields.io/packagist/l/bluefyn-international/aws-cognito?style=flat-square)
 
 
-This package provides a simple way to use AWS Cognito authentication in Laravel 7.x for Web and API Auth Drivers.
+This package provides a simple way to use AWS Cognito authentication in Laravel 8.x for Web and API Auth Drivers.
 The idea of this package, and some of the code, is based on the package from Pod-Point which you can find here: [Pod-Point/laravel-cognito-auth](https://github.com/Pod-Point/laravel-cognito-auth), [black-bits/laravel-cognito-auth](https://github.com/black-bits/laravel-cognito-auth) and [tymondesigns/jwt-auth](https://github.com/tymondesigns/jwt-auth).
 
 We decided to use it and contribute it to the community as a package, that encourages standarised use and a RAD tool for authentication using AWS Cognito. 
 
-Currently we have the following features implemented in our package:
+The following features are in the package:
 
 - Registration and Confirmation E-Mail
 - Forced password change at first login
@@ -29,14 +30,17 @@ Currently we have the following features implemented in our package:
 - Easy API Token handling (uses the cache driver)
 
 ### Disclaimer
-_This package is currently in production ready mode with already a few implementations done. We would be happy to hear from you, about the defects or new feature enhancements. However, this being a free support, we would not be able to commit to support SLAs or timelines._
+_While this package is used in production it is not a GA (1.x) level release. Updates/changes will be coming which may 
+cause issues. Additionally, not all features/options are fully implemented. You are invited to open Issues and PRs about
+the defects or new feature enhancements. However, this being a free support, we would not be able to commit to support
+SLAs or timelines._
 
 ## Installation
 
 You can install the package via composer.
 
 ```bash
-composer require ellaisys/aws-cognito
+composer require bluefyn-international/aws-cognito
 ```
 
 #### Laravel 5.4 and before
@@ -46,7 +50,7 @@ Using a version prior to Laravel 5.5 you need to manually register the service p
     // config/app.php
     'providers' => [
         ...
-        Ellaisys\Cognito\Providers\AwsCognitoServiceProvider::class,
+        BluefynInternational\Cognito\Providers\AwsCognitoServiceProvider::class,
         
     ];
 ```
@@ -54,7 +58,7 @@ Using a version prior to Laravel 5.5 you need to manually register the service p
 Next you can publish the config and the view.
 
 ```bash
-    php artisan vendor:publish --provider="Ellaisys\Cognito\Providers\AwsCognitoServiceProvider"
+    php artisan vendor:publish --provider="BluefynInternational\Cognito\Providers\AwsCognitoServiceProvider"
 ```
 Last but not least you want to change the auth driver. To do so got to your config\auth.php file and change it 
 to look the following:
@@ -119,11 +123,11 @@ If you are already working on an existing project and want to integrate Cognito 
 
 Our package is providing you 5 traits you can just add to your Auth Controllers to get our package running.
 
-- Ellaisys\Cognito\Auth\AuthenticatesUsers
-- Ellaisys\Cognito\Auth\RegistersUsers
-- Ellaisys\Cognito\Auth\ResetsPasswords
-- Ellaisys\Cognito\Auth\SendsPasswordResetEmails
-- Ellaisys\Cognito\Auth\VerifiesEmails
+- BluefynInternational\Cognito\Auth\AuthenticatesUsers
+- BluefynInternational\Cognito\Auth\RegistersUsers
+- BluefynInternational\Cognito\Auth\ResetsPasswords
+- BluefynInternational\Cognito\Auth\SendsPasswordResetEmails
+- BluefynInternational\Cognito\Auth\VerifiesEmails
 
 
 In the simplest way you just go through your Auth Controllers and change namespaces from the traits which are currently implemented from Laravel.
@@ -159,7 +163,7 @@ In case you are using this library as API driver, you can register the middlewar
 
     protected $routeMiddleware = [
         ...
-        'aws-cognito' => \Ellaisys\Cognito\Http\Middleware\AwsCognitoAuthenticate::class
+        'aws-cognito' => \BluefynInternational\Cognito\Http\Middleware\AwsCognitoAuthenticate::class
     ]
 
 ```
@@ -191,11 +195,11 @@ We have made is very easy for anyone to use the default behaviour.
 
 1. You don't need to create an extra field to store the verification token.
 2. You don't have to bother about the Sessions or API tokens, they are managed for you. The session or token is managed via the standard mechanism of Laravel. You have the liberty to keep it where ever you want, no security loop holes.
-3. If you use the trait provided by us 'Ellaisys\Cognito\Auth\RegistersUsers', the code will be limited to just a few lines
+3. If you use the trait provided by us 'BluefynInternational\Cognito\Auth\RegistersUsers', the code will be limited to just a few lines
 4. if you are using the Laravel scafolding, then make the password nullable in DB or drop it from schema. Passwords will be only managed by AWS Cognito.
 
 ```php
-    use Ellaisys\Cognito\Auth\RegistersUsers;
+    use BluefynInternational\Cognito\Auth\RegistersUsers;
 
     class UserController extends BaseController
     {
@@ -239,7 +243,7 @@ Also, the 'guard' name reference is passed, so that you can reuse the function f
 
 ```php
 
-    namespace Ellaisys\Cognito\Auth;
+    namespace BluefynInternational\Cognito\Auth;
 
     protected function attemptLogin (
         Collection $request, string $guard='web', 
@@ -263,8 +267,8 @@ In case you want to use this trait for Web login, you can write the code as show
 
     ...
 
-    use Ellaisys\Cognito\AwsCognitoClaim;
-    use Ellaisys\Cognito\Auth\AuthenticatesUsers as CognitoAuthenticatesUsers;
+    use BluefynInternational\Cognito\AwsCognitoClaim;
+    use BluefynInternational\Cognito\Auth\AuthenticatesUsers as CognitoAuthenticatesUsers;
 
     class AuthController extends Controller
     {
@@ -316,8 +320,8 @@ In case you want to use this trait for API based login, you can write the code a
 
     ...
 
-    use Ellaisys\Cognito\AwsCognitoClaim;
-    use Ellaisys\Cognito\Auth\AuthenticatesUsers as CognitoAuthenticatesUsers;
+    use BluefynInternational\Cognito\AwsCognitoClaim;
+    use BluefynInternational\Cognito\Auth\AuthenticatesUsers as CognitoAuthenticatesUsers;
 
     class AuthApiController extends Controller
     {
@@ -392,16 +396,13 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 ## Security
 
-If you discover any security related issues, please email [support@ellaisys.com](mailto:support@ellaisys.com) and also add it to the issue tracker.
+If you discover any security related issues, please add it to the issue tracker.
 
 ## Credits
 
-- [EllaiSys Team](https://github.com/ellaisys)
+- [Bluefyn-Internationl](https://github.com/bluefyn-international)
+- [EllaiSys Team](https://github.com/ellaisys) (Original creators)
 - [Amit Dhongde](https://github.com/amitdhongde)
-
-## Support us
-
-EllaiSys is a web and consulting agency specialized in Cloud Computing (AWS and Azure), DevOps, and Product Engneering. We specialize into LAMP and Microsoft stack development. You'll find an overview of what we do [on our website](https://ellaisys.com).
 
 ## License
 

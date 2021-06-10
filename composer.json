@@ -24,20 +24,17 @@
     },
     "autoload": {
         "psr-4": {
-          "Ellaisys\\Cognito\\": "src/"
+          "BluefynInternational\\Cognito\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Ellaisys\\Cognito\\Providers\\AwsCognitoServiceProvider"
+                "BluefynInternational\\Cognito\\Providers\\AwsCognitoServiceProvider"
             ],
             "aliases": {
             }
         },
-        "branch-alias": {
-            "dev-master": "1.0-dev"
-        }
     },
     "scripts": {
         "test": [
