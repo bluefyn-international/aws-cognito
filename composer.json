@@ -34,7 +34,7 @@
             ],
             "aliases": {
             }
-        },
+        }
     },
     "scripts": {
         "test": [
