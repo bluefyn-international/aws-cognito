@@ -14,34 +14,37 @@ namespace Ellaisys\Cognito\Auth;
 use Ellaisys\Cognito\AwsCognitoClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
-
 use Illuminate\Support\Facades\Validator;
-
 use Illuminate\Validation\ValidationException;
 
 trait ChangePasswords
 {
     /**
-     * Change the given user's password.
-     *
      * @param \Illuminate\Http\Request|Illuminate\Support\Collection $request
-     * @param string                                                 $paramUsername (optional)
-     * @param string                                                 $passwordOld   (optional)
-     * @param string                                                 $passwordNew   (optional)
+     * @param string                                                 $paramUsername
+     * @param string                                                 $passwordOld
+     * @param string                                                 $passwordNew
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return string
      */
-    public function reset($request, string $paramUsername = 'email', string $passwordOld = 'password', string $passwordNew = 'new_password')
-    {
+    public function reset(
+        $request,
+        string $paramUsername = 'email',
+        string $passwordOld = 'password',
+        string $passwordNew = 'new_password'
+    ) {
         if ($request instanceof Request) {
-            //Validate request
-            $validator = Validator::make($request->all(), $this->rules());
-
-            if ($validator->fails()) {
-                throw new ValidationException($validator);
-            }
-
             $request = collect($request->all());
+        }
+
+        if (! $request instanceof Collection) {
+            throw new \InvalidArgumentException();
+        }
+
+        $validator = Validator::make($request->all(), $this->rules());
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
         }
 
         //Create AWS Cognito Client

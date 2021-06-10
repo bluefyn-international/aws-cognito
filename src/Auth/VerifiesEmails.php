@@ -12,19 +12,14 @@
 namespace Ellaisys\Cognito\Auth;
 
 use Ellaisys\Cognito\AwsCognitoClient;
-
 use Illuminate\Support\Collection;
 
 trait VerifiesEmails
 {
     /**
-     * Mark the authenticated user's email address as verified.
+     * @param Collection $request
      *
-     * @param \Illuminate\Support\Collection $request
-     *
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return mixed
      */
     public function verify(Collection $request)
     {
@@ -62,11 +57,9 @@ trait VerifiesEmails
 
 
     /**
-     * Resend the email verification notification.
+     * @param Collection $request
      *
-     * @param \Illuminate\Support\Collection $request
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @return mixed
      */
     public function resend(Collection $request)
     {

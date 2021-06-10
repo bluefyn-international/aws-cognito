@@ -25,23 +25,26 @@ trait ResetsPasswords
      * Reset the given user's password.
      *
      * @param \Illuminate\Http\Request|Illuminate\Support\Collection $request
-     * @param string                                                 $paramUsername (optional)
-     * @param string                                                 $paramToken    (optional)
-     * @param string                                                 $passwordNew   (optional)
+     * @param string                                                 $paramUsername
+     * @param string                                                 $paramToken
+     * @param string                                                 $passwordNew
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function reset($request, string $paramUsername = 'email', string $paramToken = 'token', string $passwordNew = 'password')
-    {
-        if ($request instanceof Request) {
-            //Validate request
-            $validator = Validator::make($request->all(), $this->rules());
+    public function reset(
+        $request,
+        string $paramUsername = 'email',
+        string $paramToken = 'token',
+        string $passwordNew = 'password'
+    ) {
+        $validator = Validator::make($request->all(), $this->rules());
 
-            if ($validator->fails()) {
-                throw new ValidationException($validator);
-            }
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
+        }
 
-            $request = collect($request->all());
+        if (! $request instanceof Collection) {
+            throw new \InvalidArgumentException();
         }
 
         //Create AWS Cognito Client
@@ -72,7 +75,7 @@ trait ResetsPasswords
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function showResetForm(Request $request, $token = null)
+    public function showResetForm(Request $request, ?string $token = null)
     {
         return view('vendor.black-bits.laravel-cognito-auth.reset-password')->with(
             ['email' => $request->email],
@@ -85,7 +88,7 @@ trait ResetsPasswords
      *
      * @return array
      */
-    protected function rules()
+    protected function rules() : array
     {
         return [
             'token'    => 'required_without:code',

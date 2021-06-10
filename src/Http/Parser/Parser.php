@@ -20,8 +20,7 @@ class Parser
      *
      * @var array
      */
-    private $chain;
-
+    private array $chain;
 
     /**
      * The request.
@@ -29,7 +28,6 @@ class Parser
      * @var \Illuminate\Http\Request
      */
     protected $request;
-
 
     /**
      * Constructor.
@@ -45,13 +43,12 @@ class Parser
         $this->chain = $chain;
     }
 
-
     /**
      * Get the parser chain.
      *
      * @return array
      */
-    public function getChain()
+    public function getChain() : array
     {
         return $this->chain;
     }
@@ -64,7 +61,7 @@ class Parser
      *
      * @return $this
      */
-    public function setChain(array $chain)
+    public function setChain(array $chain) : self
     {
         $this->chain = $chain;
 
@@ -78,7 +75,7 @@ class Parser
      *
      * @return $this
      */
-    public function setChainOrder(array $chain)
+    public function setChainOrder(array $chain) : self
     {
         return $this->setChain($chain);
     }
@@ -88,7 +85,7 @@ class Parser
      * Iterate through the parsers and attempt to retrieve
      * a value, otherwise return null.
      *
-     * @return string|null
+     * @return string|null|void
      */
     public function parseToken()
     {
@@ -99,17 +96,15 @@ class Parser
         }
     }
 
-
     /**
      * Check whether a token exists in the chain.
      *
      * @return bool
      */
-    public function hasToken()
+    public function hasToken() : bool
     {
         return $this->parseToken() !== null;
     }
-
 
     /**
      * Set the request instance.
@@ -118,7 +113,7 @@ class Parser
      *
      * @return $this
      */
-    public function setRequest(Request $request)
+    public function setRequest(Request $request) : self
     {
         $this->request = $request;
 

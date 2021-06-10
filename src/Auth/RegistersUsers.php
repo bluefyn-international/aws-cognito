@@ -13,9 +13,7 @@ namespace Ellaisys\Cognito\Auth;
 
 use Ellaisys\Cognito\AwsCognitoClient;
 use Ellaisys\Cognito\Exceptions\InvalidUserFieldException;
-
 use Illuminate\Support\Collection;
-
 use Illuminate\Support\Facades\Log;
 
 trait RegistersUsers
@@ -29,7 +27,7 @@ trait RegistersUsers
      *
      * @return mixed
      */
-    public function createCognitoUser(Collection $request, array $clientMetadata = null, ?string $actionMethod = null)
+    public function createCognitoUser(Collection $request, ?array $clientMetadata = null, ?string $actionMethod = null)
     {
         //Initialize Cognito Attribute array
         $attributes = [];

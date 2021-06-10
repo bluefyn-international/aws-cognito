@@ -186,7 +186,7 @@ class CognitoTokenGuard extends TokenGuard
                     default:
                         $errorCode = $e->getAwsErrorCode();
                         break;
-                } //End switch
+                }
 
                 return response()->json(['error' => $errorCode, 'message' => $e->getAwsErrorCode()], 400);
             }

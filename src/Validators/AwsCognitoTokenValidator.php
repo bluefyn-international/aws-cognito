@@ -16,25 +16,25 @@ use Ellaisys\Cognito\Exceptions\InvalidTokenException;
 class AwsCognitoTokenValidator
 {
     /**
-     * Check the structure of the token.
-     *
-     * @param string $value
+     * @param $value
      *
      * @return string
+     *
+     * @throws InvalidTokenException
      */
-    public function check($value)
+    public function check(string $value) : string
     {
         return $this->validateStructure($value);
     }
 
     /**
-     * @param string $token
-     *
-     * @throws \Ellaisys\Cognito\Exceptions\InvalidTokenException
+     * @param $token
      *
      * @return string
+     *
+     * @throws InvalidTokenException
      */
-    protected function validateStructure($token)
+    protected function validateStructure(string $token) : string
     {
         $parts = explode('.', $token);
 

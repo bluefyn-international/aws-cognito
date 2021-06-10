@@ -13,7 +13,6 @@ namespace Ellaisys\Cognito\Http\Middleware;
 
 use Closure;
 use Ellaisys\Cognito\Exceptions\InvalidTokenException;
-
 use Ellaisys\Cognito\Exceptions\NoTokenException;
 use Exception;
 use Illuminate\Http\Request;
@@ -21,14 +20,12 @@ use Illuminate\Http\Request;
 class AwsCognitoAuthenticate extends BaseMiddleware
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
+     * @param Request $request
+     * @param Closure $next
      *
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $module = null, $right = null)
+    public function handle(Request $request, Closure $next)
     {
         try {
             $routeMiddleware = $request->route()->middleware();

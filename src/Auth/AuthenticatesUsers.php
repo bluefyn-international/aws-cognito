@@ -14,8 +14,6 @@ namespace Ellaisys\Cognito\Auth;
 use Auth;
 use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;
 use Ellaisys\Cognito\Exceptions\NoLocalUserException;
-
-
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -25,18 +23,21 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 trait AuthenticatesUsers
 {
     /**
-     * Attempt to log the user into the application.
+     * @param Collection $request
+     * @param string     $guard
+     * @param string     $paramUsername
+     * @param string     $paramPassword
+     * @param bool       $isJsonResponse
      *
-     * @param \Illuminate\Support\Collection $request
-     * @param \string                        $guard          (optional)
-     * @param \string                        $paramUsername  (optional)
-     * @param \string                        $paramPassword  (optional)
-     * @param \bool                          $isJsonResponse (optional)
-     *
-     * @return mixed
+     * @return mixed|void
      */
-    protected function attemptLogin(Collection $request, string $guard = 'web', string $paramUsername = 'email', string $paramPassword = 'password', bool $isJsonResponse = false)
-    {
+    protected function attemptLogin(
+        Collection $request,
+        string $guard = 'web',
+        string $paramUsername = 'email',
+        string $paramPassword = 'password',
+        bool $isJsonResponse = false
+    ) {
         try {
             //Get key fields
             $keyUsername = 'email';
@@ -55,10 +56,10 @@ trait AuthenticatesUsers
             Log::error('AuthenticatesUsers:attemptLogin:NoLocalUserException');
 
             if (config('cognito.add_missing_local_user_sso')) {
-                $response = $this->createLocalUser($credentials);
+                $this->createLocalUser($credentials);
             }
 
-            return $this->sendFailedLoginResponse($request, $e, $isJsonResponse);
+            return $this->sendFailedLoginResponse($e, $isJsonResponse);
         } catch (CognitoIdentityProviderException $e) {
             Log::error('AuthenticatesUsers:attemptLogin:CognitoIdentityProviderException');
 
@@ -66,7 +67,7 @@ trait AuthenticatesUsers
         } catch (Exception $e) {
             Log::error('AuthenticatesUsers:attemptLogin:Exception');
 
-            return $this->sendFailedLoginResponse($request, $e, $isJsonResponse);
+            return $this->sendFailedLoginResponse($e, $isJsonResponse);
         }
 
         return $claim;
@@ -80,7 +81,7 @@ trait AuthenticatesUsers
      *
      * @return mixed
      */
-    protected function createLocalUser($credentials)
+    protected function createLocalUser(array $credentials)
     {
         return true;
     }
@@ -100,14 +101,15 @@ trait AuthenticatesUsers
 
 
     /**
-     * @param Collection     $request
      * @param Exception|null $exception
      * @param bool           $isJsonResponse
      *
      * @return mixed
      */
-    private function sendFailedLoginResponse(Collection $request, ?Exception $exception = null, bool $isJsonResponse = false)
-    {
+    private function sendFailedLoginResponse(
+        ?Exception $exception = null,
+        bool $isJsonResponse = false
+    ) {
         $message = 'FailedLoginResponse';
 
         if (! empty($exception)) {
@@ -119,13 +121,11 @@ trait AuthenticatesUsers
                 'error'   => 'cognito.validation.auth.failed',
                 'message' => $message,
             ], 400);
-        } else {
-            return redirect()
-                ->withErrors([
-                    'username' => $message,
-                ]);
         }
 
-        throw new HttpException(400, $message);
+        return redirect()->back()
+            ->withErrors([
+                'username' => $message,
+            ]);
     }
 }

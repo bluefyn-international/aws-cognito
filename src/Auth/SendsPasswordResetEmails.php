@@ -13,21 +13,26 @@ namespace Ellaisys\Cognito\Auth;
 
 use Ellaisys\Cognito\AwsCognitoClient;
 use Illuminate\Support\Collection;
-
 use Illuminate\Support\Facades\Password;
 
 trait SendsPasswordResetEmails
 {
     /**
-     * Send a reset link to the given user.
+     * @param Collection $request
+     * @param string     $usernameKey
+     * @param bool       $resetTypeCode
+     * @param bool       $isJsonResponse
+     * @param array|null $attributes
      *
-     * @param \Illuminate\Support\Collection $request
-     * @param \string                        $usernameKey (optional)
-     *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return bool
      */
-    public function sendResetLinkEmail(Collection $request, string $usernameKey = 'email', bool $resetTypeCode = true, bool $isJsonResponse = false, array $attributes = null)
-    {
+    public function sendResetLinkEmail(
+        Collection $request,
+        string $usernameKey = 'email',
+        bool $resetTypeCode = true,
+        bool $isJsonResponse = false,
+        ?array $attributes = null
+    ) {
         //Cognito reset link
         $response = $this->sendCognitoResetLinkEmail($request[$usernameKey], $attributes);
 
@@ -55,13 +60,12 @@ trait SendsPasswordResetEmails
 
 
     /**
-     * Send a cognito reset link to the given user.
+     * @param string     $username
+     * @param array|null $attributes
      *
-     * @param \string $username
-     *
-     * @return \bool
+     * @return bool
      */
-    public function sendCognitoResetLinkEmail(string $username, array $attributes = null)
+    public function sendCognitoResetLinkEmail(string $username, ?array $attributes = null)
     {
         //Send AWS Cognito reset link
         $response = app()->make(AwsCognitoClient::class)->sendResetLink($username, $attributes);

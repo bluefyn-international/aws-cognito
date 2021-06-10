@@ -13,14 +13,11 @@ namespace Ellaisys\Cognito\Http\Middleware;
 
 use Ellaisys\Cognito\AwsCognito;
 use Ellaisys\Cognito\Exceptions\NoTokenException;
-
 use Exception;
-
-use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
-abstract class BaseMiddleware //extends Middleware
+abstract class BaseMiddleware
 {
     /**
      * The Cognito Authenticator.
@@ -28,7 +25,6 @@ abstract class BaseMiddleware //extends Middleware
      * @var \Ellaisys\Cognito\AwsCognito
      */
     protected $cognito;
-
 
     /**
      * Create a new BaseMiddleware instance.
@@ -42,15 +38,10 @@ abstract class BaseMiddleware //extends Middleware
         $this->cognito = $cognito;
     }
 
-
     /**
-     * Check the request for the presence of a token.
+     * @param Request $request
      *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     *
-     * @return void
+     * @throws NoTokenException
      */
     public function checkForToken(Request $request)
     {
@@ -61,13 +52,11 @@ abstract class BaseMiddleware //extends Middleware
 
 
     /**
-     * Attempt to authenticate a user via the token in the request.
+     * @param Request $request
      *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @throws \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
-     *
-     * @return void
+     * @throws NoTokenException
+     * @throws \Ellaisys\Cognito\Exceptions\AwsCognitoException
+     * @throws \Ellaisys\Cognito\Exceptions\InvalidTokenException
      */
     public function authenticate(Request $request)
     {
@@ -91,7 +80,7 @@ abstract class BaseMiddleware //extends Middleware
      *
      * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      */
-    protected function setAuthenticationHeader($response, $token = null)
+    protected function setAuthenticationHeader($response, ?string $token = null)
     {
         $token = $token ?: $this->cognito->refresh();
         $response->headers->set('Authorization', 'Bearer ' . $token);

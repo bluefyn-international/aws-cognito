@@ -16,15 +16,11 @@ use Ellaisys\Cognito\AwsCognito;
 use Ellaisys\Cognito\AwsCognitoClient;
 use Ellaisys\Cognito\AwsCognitoManager;
 use Ellaisys\Cognito\Guards\CognitoSessionGuard;
-
 use Ellaisys\Cognito\Guards\CognitoTokenGuard;
 use Ellaisys\Cognito\Http\Parser\AuthHeaders;
-
-
 use Ellaisys\Cognito\Http\Parser\Parser;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
@@ -43,7 +39,6 @@ class AwsCognitoServiceProvider extends ServiceProvider
         //Register Alias
         $this->registerAliases();
     }
-
 
     public function boot()
     {
@@ -140,8 +135,8 @@ class AwsCognitoServiceProvider extends ServiceProvider
     {
         $this->app->singleton(AwsCognitoClient::class, function (Application $app) {
             $aws_config = [
-                'region'      => config('cognito.region'),
-                'version'     => config('cognito.version'),
+                'region'  => config('cognito.region'),
+                'version' => config('cognito.version'),
             ];
 
             //Set AWS Credentials
