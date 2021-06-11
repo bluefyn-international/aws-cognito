@@ -622,6 +622,81 @@ class AwsCognitoClient
         return $user;
     }
 
+    /**
+     * @see https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_AdminSetUserPassword.html
+     *
+     * @param string $newPassword
+     * @param string $username
+     * @param bool   $permanent
+     *
+     * @return bool
+     */
+    public function adminSetUserPassword(string $newPassword, string $username, bool $permanent = false) : bool
+    {
+        $successful = false;
+        try {
+            $response = $this->client->AdminSetUserPassword([
+                'Username'   => $username,
+                'Password'   => $newPassword,
+                'Permanent'  => $permanent,
+                'UserPoolId' => $this->poolId,
+            ]);
+            $successful = $response->toArray()['@metadata']['status'] == 200;
+        } catch (CognitoIdentityProviderException $e) {
+        }
+
+        return $successful;
+    }
+
+    public function adminConfirmSignUp(string $username, array $clientMetadata = []) : bool
+    {
+        $successful = false;
+        try {
+            $payload = [
+                'Username'   => $username,
+                'UserPoolId' => $this->poolId,
+            ];
+            if ($clientMetadata) {
+                $payload['ClientMetadata'] = $clientMetadata;
+            }
+
+            $response = $this->client->AdminConfirmSignUp($payload);
+            $successful = $response->toArray()['@metadata']['status'] == 200;
+        } catch (CognitoIdentityProviderException $e) {
+        }
+
+        return $successful;
+    }
+
+    public function adminDisableUser(string $username) : bool
+    {
+        $successful = false;
+        try {
+            $response = $this->client->AdminDisableUser([
+                'Username'   => $username,
+                'UserPoolId' => $this->poolId,
+            ]);
+            $successful = $response->toArray()['@metadata']['status'] == 200;
+        } catch (CognitoIdentityProviderException $e) {
+        }
+
+        return $successful;
+    }
+
+    public function adminEnableUser(string $username) : bool
+    {
+        $successful = false;
+        try {
+            $response = $this->client->AdminEnableUser([
+                'Username'   => $username,
+                'UserPoolId' => $this->poolId,
+            ]);
+            $successful = $response->toArray()['@metadata']['status'] == 200;
+        } catch (CognitoIdentityProviderException $e) {
+        }
+
+        return $successful;
+    }
 
     /**
      * Format attributes in Name/Value array.

@@ -67,14 +67,20 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
      *
      * @return bool
      */
-    protected function hasValidCredentials($user, array $credentials) : bool
+    protected function hasValidCredentials($user, $credentials) : bool
     {
-        /** @var Result $response */
-        $result = $this->client->authenticate($credentials['email'], $credentials['password']);
+        /** @var Result $result */
+        try {
+            $result = $this->client->authenticate($credentials['email'], $credentials['password']);
+        } catch (Exception $e) {
+            return false;
+        }
 
-        if (! empty($result) && $result instanceof AwsResult) {
-            if (isset($result['ChallengeName']) &&
-                in_array($result['ChallengeName'], config('cognito.forced_challenge_names'))) {
+        if ($result instanceof AwsResult) {
+            if (
+                isset($result['ChallengeName'])
+                && in_array($result['ChallengeName'], config('cognito.forced_challenge_names'))
+            ) {
                 $this->challengeName = $result['ChallengeName'];
             }
 
@@ -89,12 +95,12 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
      * @param array $credentials
      * @param false $remember
      *
-     * @return bool
+     * @return bool|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string|null
      *
      * @throws AwsCognitoException
      * @throws NoLocalUserException
      */
-    public function attempt(array $credentials = [], bool $remember = false) : bool
+    public function attempt(array $credentials = [], $remember = false)
     {
         try {
             //Fire event for authenticating
