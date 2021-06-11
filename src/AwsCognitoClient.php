@@ -649,6 +649,52 @@ class AwsCognitoClient
         return $successful;
     }
 
+    /**
+     * @param string      $refreshToken
+     * @param string|null $secretHash
+     * @param string|null $deviceKey
+     * @param array|null  $clientMetadata
+     *
+     * @return \Aws\Result|null
+     */
+    public function adminInitiateAuthByToken(
+        string $refreshToken,
+        ?string $secretHash = null,
+        ?string $deviceKey = null,
+        ?array $clientMetadata = null
+    ) : ?\Aws\Result {
+        $response = null;
+
+        $payload = [
+            'AuthFlow'       => 'REFRESH_TOKEN_AUTH',
+            'AuthParameters' => [
+                'REFRESH_TOKEN' => $refreshToken,
+            ],
+            'ClientId'       => $this->clientId,
+            'UserPoolId'     => $this->poolId,
+        ];
+
+        if (null !== $secretHash) {
+            $payload['AuthParameters']['SECRET_HASH'] = $secretHash;
+        }
+
+        if (null !== $deviceKey) {
+            $payload['AuthParameters']['DEVICE_KEY'] = $deviceKey;
+        }
+
+        if (null !== $clientMetadata) {
+            $payload['ClientMetadata'] = $clientMetadata;
+        }
+
+        try {
+            $response = $this->client->AdminInitiateAuth($payload);
+        } catch (CognitoIdentityProviderException $e) {
+        }
+
+        return $response;
+    }
+
+
     public function adminConfirmSignUp(string $username, array $clientMetadata = []) : bool
     {
         $successful = false;
@@ -701,6 +747,20 @@ class AwsCognitoClient
         }
 
         return $successful;
+    }
+
+    public function getUserByToken(string $accesstoken)
+    {
+        $user = null;
+
+        try {
+            $user = $this->client->GetUser([
+                'AccessToken' => $accesstoken,
+            ]);
+        } catch (CognitoIdentityProviderException $e) {
+        }
+
+        return $user;
     }
 
     /**

@@ -83,7 +83,9 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
                 $this->challengeName = $result['ChallengeName'];
             }
 
-            return $user instanceof Authenticatable;
+            $this->parseAuthenticationResult($result);
+
+            return $result['@metadata']['statusCode'] === 200 && isset($result['AuthenticationResult']['AccessToken']);
         }
 
         return false;
@@ -183,6 +185,47 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
             $this->fireFailedEvent($user, $credentials);
 
             return false;
+        }
+    }
+
+    public function refreshToken(
+        ?string $refreshToken = null,
+        ?string $secretHash = null,
+        ?string $deviceKey = null,
+        ?array $clientMetadata = null
+    ) : ?string {
+        $refreshToken = $refreshToken ?? session(config('AWS_COGNITO_SESSION_REFRESH_TOKEN_KEY'));
+
+        try {
+            $result = $this->client->adminInitiateAuthByToken($refreshToken, $secretHash, $deviceKey, $clientMetadata);
+            $result['AuthenticationResult']['RefreshToken'] = $refreshToken;
+        } catch (Exception $e) {
+            return null;
+        }
+
+        $this->parseAuthenticationResult($result);
+
+        return $result['AuthenticationResult']['RefreshToken'] ?? null;
+    }
+
+    /**
+     * @param string|null $accessToken
+     *
+     * @return AwsResult|null AWS User object
+     */
+    public function getUserByToken(?string $accessToken = null)
+    {
+        $accessToken = $accessToken ?? session()->get(config('cognito.session_access_token_key'));
+
+        return $this->client->getUserByToken($accessToken);
+    }
+
+    protected function parseAuthenticationResult(\Aws\Result $result)
+    {
+        if (isset($result['AuthenticationResult']['AccessToken'])) {
+            $this->getSession()->put(config('cognito.session_access_token_key'), $result['AuthenticationResult']['AccessToken']);
+            $this->getSession()->put(config('cognito.session_refresh_token_key'), $result['AuthenticationResult']['RefreshToken']);
+            $this->getSession()->put(config('cognito.session_id_token_key'), $result['AuthenticationResult']['IdToken']);
         }
     }
 }

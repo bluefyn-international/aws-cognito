@@ -145,4 +145,16 @@ return [
     |
     */
     'force_password_auto_update_api' => env('AWS_COGNITO_FORCE_PASSWORD_AUTO_UPDATE_API', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Session keys for Cognito tokens
+    |--------------------------------------------------------------------------
+    |
+    | These keys are used to store the different Cognito tokens into the session object.
+    |
+     */
+    'session_access_token_key'  => env('AWS_COGNITO_SESSION_ACCESS_TOKEN_KEY', 'cognito.AccessToken'),
+    'session_refresh_token_key' => env('AWS_COGNITO_SESSION_REFRESH_TOKEN_KEY', 'cognito.RefreshToken'),
+    'session_id_token_key'      => env('AWS_COGNITO_SESSION_ID_TOKEN_KEY', 'cognito.IdToken'),
 ];
