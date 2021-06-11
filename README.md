@@ -13,7 +13,8 @@ both PHP and Laravel.
 This package provides a simple way to use AWS Cognito authentication in Laravel 8.x for Web and API Auth Drivers.
 The idea of this package, and some of the code, is based on the package from Pod-Point which you can find here: [Pod-Point/laravel-cognito-auth](https://github.com/Pod-Point/laravel-cognito-auth), [black-bits/laravel-cognito-auth](https://github.com/black-bits/laravel-cognito-auth) and [tymondesigns/jwt-auth](https://github.com/tymondesigns/jwt-auth).
 
-We decided to use it and contribute it to the community as a package, that encourages standarised use and a RAD tool for authentication using AWS Cognito. 
+We decided to use it and contribute it to the community as a package, that encourages standardised use and a RAD tool 
+for authentication using AWS Cognito. 
 
 The following features are in the package:
 
@@ -35,27 +36,33 @@ cause issues. Additionally, not all features/options are fully implemented. You 
 the defects or new feature enhancements. However, this being a free support, we would not be able to commit to support
 SLAs or timelines._
 
+
+
 ## Installation
 
+### Compatability
+
+|PHP Version|Support|
+|-|-|
+|7.4|Yes|
+|8.0|Untested|
+|8.1|Untested|
+
+|Laravel Version|Support|
+|-|-|
+|7.x|Untested|
+|8.x|Yes|
+
+### Composer
 You can install the package via composer.
 
 ```bash
 composer require bluefyn-international/aws-cognito
 ```
 
-#### Laravel 5.4 and before
-Using a version prior to Laravel 5.5 you need to manually register the service provider.
+### Publishing Assets
 
-```php
-    // config/app.php
-    'providers' => [
-        ...
-        BluefynInternational\Cognito\Providers\AwsCognitoServiceProvider::class,
-        
-    ];
-```
-
-Next you can publish the config and the view.
+You can publish the config and the view.
 
 ```bash
     php artisan vendor:publish --provider="BluefynInternational\Cognito\Providers\AwsCognitoServiceProvider"
