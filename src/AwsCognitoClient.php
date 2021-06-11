@@ -642,7 +642,7 @@ class AwsCognitoClient
                 'Permanent'  => $permanent,
                 'UserPoolId' => $this->poolId,
             ]);
-            $successful = $response->toArray()['@metadata']['status'] == 200;
+            $successful = $response->toArray()['@metadata']['statusCode'] == 200;
         } catch (CognitoIdentityProviderException $e) {
         }
 
@@ -664,7 +664,7 @@ class AwsCognitoClient
             }
 
             $response = $this->client->AdminConfirmSignUp($payload);
-            $successful = $response->toArray()['@metadata']['status'] == 200;
+            $successful = $response->toArray()['@metadata']['statusCode'] == 200;
         } catch (CognitoIdentityProviderException $e) {
         }
 
@@ -680,7 +680,7 @@ class AwsCognitoClient
                 'Username'   => $username,
                 'UserPoolId' => $this->poolId,
             ]);
-            $successful = $response->toArray()['@metadata']['status'] == 200;
+            $successful = $response->toArray()['@metadata']['statusCode'] == 200;
         } catch (CognitoIdentityProviderException $e) {
         }
 
@@ -696,7 +696,7 @@ class AwsCognitoClient
                 'Username'   => $username,
                 'UserPoolId' => $this->poolId,
             ]);
-            $successful = $response->toArray()['@metadata']['status'] == 200;
+            $successful = $response->toArray()['@metadata']['statusCode'] == 200;
         } catch (CognitoIdentityProviderException $e) {
         }
 
