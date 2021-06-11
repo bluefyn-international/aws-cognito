@@ -5,7 +5,6 @@ namespace BluefynInternational\Cognito\Exceptions;
 use Exception;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Throwable;
 
 class InvalidUserModelException extends Exception
 {

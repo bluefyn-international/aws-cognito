@@ -15,7 +15,6 @@ use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;
 use Aws\Result as AwsResult;
 use BluefynInternational\Cognito\AwsCognitoClient;
 use BluefynInternational\Cognito\Exceptions\AwsCognitoException;
-use BluefynInternational\Cognito\Exceptions\InvalidUserModelException;
 use BluefynInternational\Cognito\Exceptions\NoLocalUserException;
 use Exception;
 use Illuminate\Auth\SessionGuard;
@@ -67,14 +66,20 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
      *
      * @return bool
      */
-    protected function hasValidCredentials($user, array $credentials) : bool
+    protected function hasValidCredentials($user, $credentials) : bool
     {
-        /** @var Result $response */
-        $result = $this->client->authenticate($credentials['email'], $credentials['password']);
+        /** @var Result $result */
+        try {
+            $result = $this->client->authenticate($credentials['email'], $credentials['password']);
+        } catch (Exception $e) {
+            return false;
+        }
 
-        if (! empty($result) && $result instanceof AwsResult) {
-            if (isset($result['ChallengeName']) &&
-                in_array($result['ChallengeName'], config('cognito.forced_challenge_names'))) {
+        if ($result instanceof AwsResult) {
+            if (
+                isset($result['ChallengeName'])
+                && in_array($result['ChallengeName'], config('cognito.forced_challenge_names'))
+            ) {
                 $this->challengeName = $result['ChallengeName'];
             }
 
@@ -89,12 +94,12 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
      * @param array $credentials
      * @param false $remember
      *
-     * @return bool
-     *
      * @throws AwsCognitoException
      * @throws NoLocalUserException
+     *
+     * @return bool|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string|null
      */
-    public function attempt(array $credentials = [], bool $remember = false) : bool
+    public function attempt(array $credentials = [], $remember = false)
     {
         try {
             //Fire event for authenticating

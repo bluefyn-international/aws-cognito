@@ -4,8 +4,6 @@ namespace BluefynInternational\Cognito\Exceptions;
 
 use Exception;
 
-use Throwable;
-
 class InvalidUserFieldException extends Exception
 {
     /**
