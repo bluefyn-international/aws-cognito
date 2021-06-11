@@ -78,10 +78,10 @@ trait ChangePasswords
      * If a user is being forced to set a new password for the first time follow that flow instead.
      *
      * @param \BluefynInternational\Cognito\AwsCognitoClient $client
-     * @param \Illuminate\Support\Collection     $request
-     * @param string                             $paramUsername
-     * @param string                             $passwordOld
-     * @param string                             $passwordNew
+     * @param \Illuminate\Support\Collection                 $request
+     * @param string                                         $paramUsername
+     * @param string                                         $passwordOld
+     * @param string                                         $passwordNew
      *
      * @return string
      */
@@ -99,10 +99,10 @@ trait ChangePasswords
      * If a user is being forced to set a new password for the first time follow that flow instead.
      *
      * @param \BluefynInternational\Cognito\AwsCognitoClient $client
-     * @param \Illuminate\Support\Collection     $request
-     * @param string                             $paramUsername
-     * @param string                             $passwordOld
-     * @param string                             $passwordNew
+     * @param \Illuminate\Support\Collection                 $request
+     * @param string                                         $paramUsername
+     * @param string                                         $passwordOld
+     * @param string                                         $passwordNew
      *
      * @return string
      */

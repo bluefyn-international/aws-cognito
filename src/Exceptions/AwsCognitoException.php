@@ -3,7 +3,6 @@
 namespace BluefynInternational\Cognito\Exceptions;
 
 use Exception;
-use Throwable;
 
 class AwsCognitoException extends Exception
 {

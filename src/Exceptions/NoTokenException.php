@@ -5,7 +5,6 @@ namespace BluefynInternational\Cognito\Exceptions;
 use Exception;
 
 use Illuminate\Auth\AuthenticationException;
-use Throwable;
 
 class NoTokenException extends Exception
 {

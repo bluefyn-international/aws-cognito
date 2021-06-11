@@ -18,9 +18,9 @@ class AwsCognitoTokenValidator
     /**
      * @param $value
      *
-     * @return string
-     *
      * @throws InvalidTokenException
+     *
+     * @return string
      */
     public function check(string $value) : string
     {
@@ -30,9 +30,9 @@ class AwsCognitoTokenValidator
     /**
      * @param $token
      *
-     * @return string
-     *
      * @throws InvalidTokenException
+     *
+     * @return string
      */
     protected function validateStructure(string $token) : string
     {

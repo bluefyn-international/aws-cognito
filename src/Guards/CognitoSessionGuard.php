@@ -15,7 +15,6 @@ use Aws\CognitoIdentityProvider\Exception\CognitoIdentityProviderException;
 use Aws\Result as AwsResult;
 use BluefynInternational\Cognito\AwsCognitoClient;
 use BluefynInternational\Cognito\Exceptions\AwsCognitoException;
-use BluefynInternational\Cognito\Exceptions\InvalidUserModelException;
 use BluefynInternational\Cognito\Exceptions\NoLocalUserException;
 use Exception;
 use Illuminate\Auth\SessionGuard;
@@ -95,10 +94,10 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
      * @param array $credentials
      * @param false $remember
      *
-     * @return bool|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string|null
-     *
      * @throws AwsCognitoException
      * @throws NoLocalUserException
+     *
+     * @return bool|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string|null
      */
     public function attempt(array $credentials = [], $remember = false)
     {

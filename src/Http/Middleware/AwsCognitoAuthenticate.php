@@ -11,9 +11,9 @@
 
 namespace BluefynInternational\Cognito\Http\Middleware;
 
-use Closure;
 use BluefynInternational\Cognito\Exceptions\InvalidTokenException;
 use BluefynInternational\Cognito\Exceptions\NoTokenException;
+use Closure;
 use Exception;
 use Illuminate\Http\Request;
 

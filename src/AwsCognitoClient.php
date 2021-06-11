@@ -634,6 +634,7 @@ class AwsCognitoClient
     public function adminSetUserPassword(string $newPassword, string $username, bool $permanent = false) : bool
     {
         $successful = false;
+
         try {
             $response = $this->client->AdminSetUserPassword([
                 'Username'   => $username,
@@ -651,11 +652,13 @@ class AwsCognitoClient
     public function adminConfirmSignUp(string $username, array $clientMetadata = []) : bool
     {
         $successful = false;
+
         try {
             $payload = [
                 'Username'   => $username,
                 'UserPoolId' => $this->poolId,
             ];
+
             if ($clientMetadata) {
                 $payload['ClientMetadata'] = $clientMetadata;
             }
@@ -671,6 +674,7 @@ class AwsCognitoClient
     public function adminDisableUser(string $username) : bool
     {
         $successful = false;
+
         try {
             $response = $this->client->AdminDisableUser([
                 'Username'   => $username,
@@ -686,6 +690,7 @@ class AwsCognitoClient
     public function adminEnableUser(string $username) : bool
     {
         $successful = false;
+
         try {
             $response = $this->client->AdminEnableUser([
                 'Username'   => $username,
