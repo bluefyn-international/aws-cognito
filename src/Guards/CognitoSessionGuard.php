@@ -199,7 +199,7 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
         try {
             $result = $this->client->adminInitiateAuthByToken($refreshToken, $secretHash, $deviceKey, $clientMetadata);
             $result['AuthenticationResult']['RefreshToken'] = $refreshToken;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
 

@@ -688,7 +688,6 @@ class AwsCognitoClient
 
         try {
             $response = $this->client->AdminInitiateAuth($payload);
-
         } catch (CognitoIdentityProviderException $e) {
         }
 
@@ -753,6 +752,7 @@ class AwsCognitoClient
     public function getUserByToken(string $accesstoken)
     {
         $user = null;
+
         try {
             $user = $this->client->GetUser([
                 'AccessToken' => $accesstoken,
