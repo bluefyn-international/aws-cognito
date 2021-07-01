@@ -220,7 +220,10 @@ class CognitoSessionGuard extends SessionGuard implements StatefulGuard
         return $this->client->getUserByToken($accessToken);
     }
 
-    protected function parseAuthenticationResult(\Aws\Result $result)
+    /**
+     * @param AwsResult|array $result
+     */
+    protected function parseAuthenticationResult($result)
     {
         if (isset($result['AuthenticationResult']['AccessToken'])) {
             $this->getSession()->put(config('cognito.session_access_token_key'), $result['AuthenticationResult']['AccessToken']);
